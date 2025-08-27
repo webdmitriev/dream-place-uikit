@@ -15,9 +15,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let sceneWindow = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: sceneWindow)
-        self.window?.rootViewController = UINavigationController(rootViewController: OnboardingView())
-        self.window?.makeKeyAndVisible()
 
+        self.sceneHomeView(showTabBar: UserDefaults.standard.bool(forKey: "onboardingCompleted"))
+        
+        self.window?.makeKeyAndVisible()
+    }
+    
+    func sceneHomeView(showTabBar: Bool = false) {
+        let rootViewController: UIViewController
+        
+        if showTabBar {
+            rootViewController = Builder.createTabBarController()
+        } else {
+            rootViewController = UINavigationController(rootViewController: Builder.createOnboardingView())
+        }
+        
+        setRootViewController(rootViewController)
+    }
+
+    // Универсальный метод смены root
+    private func setRootViewController(_ viewController: UIViewController) {
+        guard let window = self.window else { return }
+        
+        UIView.transition(with: window,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                              window.rootViewController = viewController
+                          },
+                          completion: nil)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
