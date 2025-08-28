@@ -14,9 +14,22 @@ final class Builder {
     }
     
     static func createHomeView() -> UIViewController {
-        let view = HomeViewController()
-        view.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
-        return view
+        let viewController = HomeViewController()
+        let presenter = HomePresenter()
+        let interactor = MockHomeInteractor() // mock
+        let router = HomeRouter()
+        
+        viewController.output = presenter
+        presenter.view = viewController
+        presenter.interactor = interactor
+        presenter.router = router
+        
+        interactor.presenter = presenter
+        router.controller = viewController
+        
+        viewController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        
+        return viewController
     }
     
     static func createBookingView() -> UIViewController {
