@@ -28,6 +28,7 @@ final class HomeViewController: UIViewController, HomeViewInput {
         return $0
     }(UIScrollView())
     
+
     // MARK: Header
     lazy var homeHeaderView: UIView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -56,6 +57,28 @@ final class HomeViewController: UIViewController, HomeViewInput {
         $0.isHidden = false
         return $0
     }(UIView())
+    
+
+    // MARK: SearchBar
+    lazy var searchBar: UITextField = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        $0.placeholder = "Look for homestay"
+        $0.textColor = .appGrayText
+        $0.backgroundColor = .appWhite
+        $0.layer.cornerRadius = 24
+        $0.addPaddingToTextField()
+        return $0
+    }(UITextField())
+    
+    lazy var searchFindButton: UIButton = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        $0.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        $0.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        $0.tintColor = .appGrayText
+        return $0
+    }(UIButton())
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,11 +110,14 @@ extension HomeViewController {
             view.addSubview($0)
         }
         setupHeaderUI()
+        setupSearchBarUI()
+        
     }
     
     func sutupOwnedConstraints() {
         setupConstraints()
         setupHeaderConstraints()
+        setupSearchBarConstraints()
     }
     
     func setupConstraints() {
@@ -138,6 +164,28 @@ extension HomeViewController {
             
             homeHeaderNotificationBalloon.topAnchor.constraint(equalTo: homeHeaderNotification.topAnchor, constant: 8),
             homeHeaderNotificationBalloon.trailingAnchor.constraint(equalTo: homeHeaderNotification.trailingAnchor, constant: -8),
+            
+            homeHeaderView.bottomAnchor.constraint(equalTo: homeHeaderNotification.bottomAnchor, constant: 0)
+        ])
+    }
+}
+
+// MARK: SearchBar
+extension HomeViewController {
+    func setupSearchBarUI() {
+        [searchBar, searchFindButton].forEach {
+            view.addSubview($0)
+        }
+    }
+    
+    func setupSearchBarConstraints() {
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: homeHeaderView.bottomAnchor, constant: 66),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: uiBuilder.offset),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -uiBuilder.offset),
+            
+            searchFindButton.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            searchFindButton.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -24),
         ])
     }
 }
