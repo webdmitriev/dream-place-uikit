@@ -20,6 +20,7 @@ final class UIBuilder {
     
     let offset: CGFloat = 16
     let cornerRadius12: CGFloat = 12
+    let cornerRadiusStandart: CGFloat = 32
     
     func addOnboardingImage(_ img: String) -> UIImageView {
         let imageView = UIImageView(image: UIImage(named: img))
@@ -50,6 +51,51 @@ final class UIBuilder {
         button.backgroundColor = .appBlue
         button.layer.cornerRadius = cornerRadius12
         return button
+    }
+    
+    func addButtonImage(_ img: String, system: Bool = true, width: CGFloat = 48, height: CGFloat = 48, tint: UIColor = .appGrayText) -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: width).isActive = true
+        button.heightAnchor.constraint(equalToConstant: height).isActive = true
+        
+        button.setImage(system ? UIImage(systemName: img) : UIImage(named: img), for: .normal)
+
+        button.tintColor = system ? tint : .white
+        return button
+    }
+    
+    func addScrollView(bgc: UIColor) -> UIScrollView {
+        let scroll = UIScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.contentInsetAdjustmentBehavior = .never
+        scroll.alwaysBounceVertical = false
+        scroll.backgroundColor = bgc
+        return scroll
+    }
+    
+    func addView(bgc: UIColor, brs: CGFloat = 0, clipsToBounds: Bool = true) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = bgc
+        view.layer.cornerRadius = brs
+        view.clipsToBounds = clipsToBounds
+        return view
+    }
+    
+    func addSearchBar(_ placeholder: String = "", height: CGFloat = 48, color: UIColor = .appGrayText, bgc: UIColor = .appWhite) -> UITextField {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.heightAnchor.constraint(equalToConstant: height).isActive = true
+        
+        textField.placeholder = placeholder
+
+        textField.textColor = color
+        textField.backgroundColor = bgc
+        textField.layer.cornerRadius = height / 2
+        textField.addPaddingToTextField()
+        
+        return textField
     }
     
 }

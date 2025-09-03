@@ -16,78 +16,48 @@ final class HomeViewController: UIViewController, HomeViewInput {
     
     lazy var homeBgImageView: UIImageView = {
         $0.image = UIImage(named: "home-bg")
-        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
         return $0
-    }(UIImageView())
+    }(UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 332)))
     
-    // Scroll
-    lazy var scrollView: UIScrollView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        return $0
-    }(UIScrollView())
+    // MARK: - ScrollView
+    private lazy var scrollView: UIScrollView = uiBuilder.addScrollView(bgc: .clear)
+    private lazy var scrollContent: UIView = uiBuilder.addView(bgc: .clear, clipsToBounds: false)
     
 
     // MARK: Header
-    lazy var homeHeaderView: UIView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        return $0
-    }(UIStackView())
+    private lazy var homeHeaderView: UIView = uiBuilder.addView(bgc: .clear, clipsToBounds: false)
     
-    lazy var homeHeaderLabel: UILabel = uiBuilder.addLabel("Current Location", fz: .label, fw: .medium,
+    private lazy var homeHeaderLabel: UILabel = uiBuilder.addLabel("Current Location", fz: .label, fw: .medium,
                                                            color: .appWhite, lines: 1)
     
-    lazy var homeHeaderLocation: UILabel = uiBuilder.addLabel("Labuan Bajo, INA Labuan Bajo, INA Labuan Bajo, INA Labuan Bajo, INA Labuan Bajo, INA", fz: .text, fw: .medium,
+    private lazy var homeHeaderLocation: UILabel = uiBuilder.addLabel("Bohol, Philippines (PH)", fz: .text, fw: .medium,
                                                               color: .appWhite, lines: 1)
     
-    lazy var homeHeaderNotification: UIButton = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        $0.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        $0.setImage(UIImage(named: "btn-notification"), for: .normal)
-        return $0
-    }(UIButton())
+    private lazy var homeHeaderNotification: UIButton = uiBuilder.addButtonImage("btn-notification", system: false,
+                                                                         width: 40, height: 40)
     
-    lazy var homeHeaderNotificationBalloon: UIView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.widthAnchor.constraint(equalToConstant: 10).isActive = true
-        $0.heightAnchor.constraint(equalToConstant: 10).isActive = true
-        $0.backgroundColor = .appRed
-        $0.isHidden = false
-        return $0
-    }(UIView())
+    private lazy var homeHeaderNotificationBalloon: UIView = uiBuilder.addView(bgc: .clear)
     
 
     // MARK: SearchBar
-    lazy var searchBar: UITextField = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        $0.placeholder = "Look for homestay"
-        $0.textColor = .appGrayText
-        $0.backgroundColor = .appWhite
-        $0.layer.cornerRadius = 24
-        $0.addPaddingToTextField()
-        return $0
-    }(UITextField())
+    private lazy var searchBar: UITextField = uiBuilder.addSearchBar("Look for homestay")
     
-    lazy var searchFindButton: UIButton = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.widthAnchor.constraint(equalToConstant: 32).isActive = true
-        $0.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        $0.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        $0.tintColor = .appGrayText
-        return $0
-    }(UIButton())
+    private lazy var searchBarBtn: UIButton = uiBuilder.addButtonImage("magnifyingglass",
+                                                                       width: 32, height: 32, tint: .appGrayText)
+
+    
+    // MARK: Block vertical hotels
+    private lazy var blockVerticalHotels: UIView = uiBuilder.addView(bgc: .appWhite, brs: uiBuilder.cornerRadiusStandart)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupOwnedViews()
-        sutupOwnedConstraints()
         
         // output.viewDidLoad()
-        
     }
     
     func displayHotels(_ hotels: [Hotel]) {
@@ -98,58 +68,83 @@ final class HomeViewController: UIViewController, HomeViewInput {
         print(error.localizedDescription)
     }
     
-    func changeOnboardingStatus(_ status: Bool) {
+    private func changeOnboardingStatus(_ status: Bool) {
         UserDefaults.standard.set(status, forKey: "onboardingCompleted")
     }
 }
 
 // MARK: Home
 extension HomeViewController {
+    // setup all ui
     func setupOwnedViews() {
-        [homeBgImageView, scrollView].forEach {
-            view.addSubview($0)
-        }
+        view.addSubviews(homeBgImageView, scrollView)
+
+        scrollView.addSubview(scrollContent)
+
+        // ui
         setupHeaderUI()
         setupSearchBarUI()
+        setupVerticalHotelsUI()
+
+        // delegate
+        setupScrollView()
         
+        // constraints
+        sutupOwnedConstraints()
     }
     
+    // setup all constraints
     func sutupOwnedConstraints() {
         setupConstraints()
-        setupHeaderConstraints()
-        setupSearchBarConstraints()
     }
     
     func setupConstraints() {
+
         NSLayoutConstraint.activate([
-            homeBgImageView.topAnchor.constraint(equalTo: view.topAnchor),
-            homeBgImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            homeBgImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            homeBgImageView.heightAnchor.constraint(equalToConstant: 332),
-            
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            scrollView.bottomAnchor.constraint(equalTo: homeHeaderView.bottomAnchor, constant: 0)
+            scrollContent.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollContent.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollContent.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollContent.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
         ])
     }
 }
 
+// MARK: UIScrollViewDelegate - for changing picture on scroll
+extension HomeViewController: UIScrollViewDelegate {
+    private func setupScrollView() {
+        scrollView.delegate = self
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let scrolledPixels = scrollView.contentOffset.y
+        homeBgImageView.frame = CGRect(x: 0, y: -scrolledPixels,
+                                       width: view.frame.width, height: view.frame.width + scrolledPixels)
+    }
+}
 
 // MARK: Header
 extension HomeViewController {
     func setupHeaderUI() {
-        [homeHeaderView, homeHeaderLabel, homeHeaderLocation, homeHeaderNotification, homeHeaderNotificationBalloon].forEach {
-            view.addSubview($0)
-        }
+        scrollContent.addSubviews(homeHeaderView, homeHeaderLabel, homeHeaderLocation, homeHeaderNotification, homeHeaderNotificationBalloon)
+        
+        homeHeaderNotificationBalloon.widthAnchor.constraint(equalToConstant: 10).isActive = true
+        homeHeaderNotificationBalloon.heightAnchor.constraint(equalToConstant: 10).isActive = true
+        homeHeaderNotificationBalloon.backgroundColor = .appRed
+        
+        setupHeaderConstraints()
     }
     
     func setupHeaderConstraints() {
         NSLayoutConstraint.activate([
-            homeHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-            homeHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: uiBuilder.offset),
-            homeHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -uiBuilder.offset),
+            homeHeaderView.topAnchor.constraint(equalTo: scrollContent.safeAreaLayoutGuide.topAnchor, constant: 0),
+            homeHeaderView.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: uiBuilder.offset),
+            homeHeaderView.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -uiBuilder.offset),
             
             homeHeaderLabel.topAnchor.constraint(equalTo: homeHeaderView.topAnchor, constant: 0),
             homeHeaderLabel.leadingAnchor.constraint(equalTo: homeHeaderView.leadingAnchor, constant: 0),
@@ -173,19 +168,45 @@ extension HomeViewController {
 // MARK: SearchBar
 extension HomeViewController {
     func setupSearchBarUI() {
-        [searchBar, searchFindButton].forEach {
-            view.addSubview($0)
-        }
+        scrollContent.addSubviews(searchBar, searchBarBtn)
+        
+        setupSearchBarConstraints()
     }
     
     func setupSearchBarConstraints() {
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: homeHeaderView.bottomAnchor, constant: 66),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: uiBuilder.offset),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -uiBuilder.offset),
+            searchBar.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: uiBuilder.offset),
+            searchBar.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -uiBuilder.offset),
             
-            searchFindButton.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
-            searchFindButton.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -24),
+            searchBarBtn.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            searchBarBtn.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -18),
+        ])
+    }
+    
+    // Methods
+    @objc
+    func searchButtonTapped() {
+        print("searchButtonTapped")
+    }
+}
+
+// MARK: VerticalHotels
+extension HomeViewController {
+    func setupVerticalHotelsUI() {
+        scrollContent.addSubviews(blockVerticalHotels)
+        
+        setupVerticalHotelsConstraints()
+    }
+    
+    func setupVerticalHotelsConstraints() {
+        NSLayoutConstraint.activate([
+            blockVerticalHotels.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 36),
+            blockVerticalHotels.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor),
+            blockVerticalHotels.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor),
+            blockVerticalHotels.heightAnchor.constraint(equalToConstant: 1400),
+            
+            blockVerticalHotels.bottomAnchor.constraint(equalTo: scrollContent.bottomAnchor)
         ])
     }
 }
