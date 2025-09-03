@@ -15,6 +15,7 @@ final class UIBuilder {
         case title = 20
         case text = 16
         case btn = 15
+        case label = 12
     }
     
     let offset: CGFloat = 16
@@ -35,6 +36,7 @@ final class UIBuilder {
         label.font = .systemFont(ofSize: fz.rawValue, weight: fw)
         label.numberOfLines = lines
         label.textAlignment = align
+        label.textColor = color
         return label
     }
     
