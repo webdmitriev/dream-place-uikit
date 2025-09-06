@@ -29,13 +29,11 @@ struct CollectionStruct: Hashable {
             CollectionStruct(title: "Hotel Near You", action: false, type: .header, items: [
                 Items(name: "Header")
             ]),
-            CollectionStruct(title: "Search", action: true, type: .search, items: [
+            CollectionStruct(title: "Search", action: false, type: .search, items: [
                 Items(name: "Search")
             ]),
             CollectionStruct(title: "Hotels", action: false, type: .hotels, items: [
-                Items(name: "Hotel 1"),
-                Items(name: "Hotel 2"),
-                Items(name: "Hotel 3"),
+                Items(name: "Hotel 1")
             ])
         ]
     }

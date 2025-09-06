@@ -41,14 +41,14 @@ final class UIBuilder {
         return label
     }
     
-    func addButton(_ text: String) -> UIButton {
+    func addButton(_ text: String, color: UIColor = .appWhite, bgc: UIColor = .appBlue) -> UIButton {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 48).isActive = true
         button.setTitle(text, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: FontSize.btn.rawValue, weight: .medium)
-        button.setTitleColor(.appWhite, for: .normal)
-        button.backgroundColor = .appBlue
+        button.setTitleColor(color, for: .normal)
+        button.backgroundColor = bgc
         button.layer.cornerRadius = cornerRadius12
         return button
     }
@@ -96,6 +96,15 @@ final class UIBuilder {
         textField.addPaddingToTextField()
         
         return textField
+    }
+    
+    func addStackHeader() -> UIStackView {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.distribution = .equalSpacing
+        stack.spacing = 16
+        return stack
     }
     
 }
