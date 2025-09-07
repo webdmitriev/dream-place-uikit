@@ -35,7 +35,7 @@ final class SearchCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
             searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
-            searchBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
+            searchBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -34),
 
             searchBarBtn.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
             searchBarBtn.trailingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: -18),

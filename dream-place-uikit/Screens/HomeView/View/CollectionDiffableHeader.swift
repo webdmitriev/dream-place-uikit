@@ -7,26 +7,29 @@
 
 import UIKit
 
-class CollectionDiffableHeader: UICollectionReusableView {
+final class CollectionDiffableHeader: UICollectionReusableView {
     static let reuseID: String = "CollectionDiffableHeader"
     
-    lazy var titleCell: UILabel = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "Header"
-        $0.font = .systemFont(ofSize: 24, weight: .bold)
-        $0.textColor = .black
-        
-        return $0
-    }(UILabel())
+    private let uiBuilder = UIBuilder()
+    
+    private lazy var stackView: UIStackView = uiBuilder.addStackHeader()
+    
+    private lazy var titleLabel: UILabel = uiBuilder.addLabel("Hotel Near You", fz: .header, fw: .medium, color: .appBlack, lines: 1)
+    
+    private lazy var headerBtn: UIButton = uiBuilder.addButton("View all", color: .appBlue, bgc: .clear)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        addSubview(titleCell)
+        addSubview(stackView)
+        
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(headerBtn)
+        
         NSLayoutConstraint.activate([
-            titleCell.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-            titleCell.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-            titleCell.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 14),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
     }
     required init?(coder: NSCoder) {
@@ -34,7 +37,10 @@ class CollectionDiffableHeader: UICollectionReusableView {
     }
     
     // Methods
-    func actionCell(isHide: Bool) {
-        self.titleCell.isHidden = !isHide
+    func actionCell(title: String, brsTop: CGFloat = 24) {
+        clipsToBounds = true
+        layer.cornerRadius = brsTop
+        layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        self.titleLabel.text = title
     }
 }

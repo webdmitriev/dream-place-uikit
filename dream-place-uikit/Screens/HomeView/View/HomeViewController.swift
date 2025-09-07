@@ -14,12 +14,14 @@ final class HomeViewController: UIViewController {
     
     private let uiBuilder = UIBuilder()
     
+    private let headerImageHeight: CGFloat = 332
+    
     private lazy var headerImage: UIImageView = {
         $0.image = UIImage(named: "home-bg")
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
         return $0
-    }(UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 332)))
+    }(UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: headerImageHeight)))
     
     var output: HomeViewOutput!
     
@@ -47,6 +49,8 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubviews(headerImage, collectionView)
+        
+        collectionView.delegate = self
         
         createDataSource()
         createSnapshot()
@@ -88,8 +92,6 @@ final class HomeViewController: UIViewController {
         }
     }
 
-
-    
     // MARK: 2 - dataSource
     private func createDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource<CollectionStruct, Items>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
@@ -116,10 +118,9 @@ final class HomeViewController: UIViewController {
                                                                          withReuseIdentifier: CollectionDiffableHeader.reuseID,
                                                                          for: indexPath) as! CollectionDiffableHeader
             
-            
             let section = self?.items[indexPath.section]
-            header.titleCell.text = section?.title
-            header.actionCell(isHide: section?.action ?? false)
+            header.backgroundColor = .appWhite
+            header.actionCell(title: section?.title ?? "")
             return header
         }
         
@@ -153,16 +154,35 @@ extension HomeViewController: HomeViewInput {
     }
 }
 
+// MARK: UICollectionViewDelegate
+extension HomeViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let scrollHeight = scrollView.contentSize.height - scrollView.bounds.height
+        let scrollPercentage = offsetY / scrollHeight
+        
+        // Изменяем высоту фона в зависимости от скролла
+        updateBackgroundHeight(for: offsetY, percentage: scrollPercentage)
+    }
+    
+    private func updateBackgroundHeight(for offsetY: CGFloat, percentage: CGFloat) {
+        let newHeight = headerImageHeight - offsetY * 0.5
+        headerImage.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: newHeight)
+        
+        UIView.animate(withDuration: 0.1) {
+            self.view.layoutIfNeeded()
+        }
+    }
+}
 
 // MARK: Top Add Header
 extension HomeViewController {
-    private func createTopHeader(height: CGFloat = 44) -> NSCollectionLayoutBoundarySupplementaryItem {
+    private func createTopHeader(height: CGFloat = 48) -> NSCollectionLayoutBoundarySupplementaryItem {
         NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(height)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top
         )
     }
 }
-
 
 // MARK: Sections (height)
 extension HomeViewController {
@@ -176,7 +196,7 @@ extension HomeViewController {
 
     private func createSearchSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .absolute(132))
+                                              heightDimension: .absolute(142))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
         return NSCollectionLayoutSection(group: group)
@@ -190,11 +210,3 @@ extension HomeViewController {
         return NSCollectionLayoutSection(group: group)
     }
 }
-
-
-
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let scrolledPixels = scrollView.contentOffset.y
-//        homeBgImageView.frame = CGRect(x: 0, y: -scrolledPixels,
-//                                       width: view.frame.width, height: view.frame.width + scrolledPixels)
-//    }
