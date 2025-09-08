@@ -12,7 +12,7 @@ final class CollectionDiffableHeader: UICollectionReusableView {
     
     private let uiBuilder = UIBuilder()
     
-    private lazy var stackView: UIStackView = uiBuilder.addStackHeader()
+    private lazy var stackView: UIStackView = uiBuilder.addStack()
     
     private lazy var titleLabel: UILabel = uiBuilder.addLabel("Hotel Near You", fz: .header, fw: .medium, color: .appBlack, lines: 1)
     
@@ -28,8 +28,8 @@ final class CollectionDiffableHeader: UICollectionReusableView {
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: 14),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0)
         ])
     }
     required init?(coder: NSCoder) {
@@ -38,9 +38,6 @@ final class CollectionDiffableHeader: UICollectionReusableView {
     
     // Methods
     func actionCell(title: String, brsTop: CGFloat = 24) {
-        clipsToBounds = true
-        layer.cornerRadius = brsTop
-        layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         self.titleLabel.text = title
     }
 }

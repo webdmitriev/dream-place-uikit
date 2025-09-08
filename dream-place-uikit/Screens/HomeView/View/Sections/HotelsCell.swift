@@ -12,6 +12,27 @@ final class HotelsCell: UICollectionViewCell {
     
     private let uiBuilder = UIBuilder()
     
+    private lazy var cellImage: UIImageView = uiBuilder.addImage("post-01", mode: .scaleToFill)
+    private lazy var cellGradient = GradientView(
+        colors: [
+            UIColor.appBlack.withAlphaComponent(0.9),
+            UIColor.clear
+        ],
+        startPoint: CGPoint(x: 0.5, y: 1.0),
+        endPoint: CGPoint(x: 0.5, y: 0.0)
+    )
+    private lazy var cellTitle: UILabel = uiBuilder.addLabel("Title", fz: .text, fw: .bold, color: .appWhite, lines: 2)
+    private lazy var cellAddress: UILabel = uiBuilder.addLabel("Address", fz: .label, color: .appWhite, lines: 1)
+    
+    private lazy var cellPrice: UILabel = {
+        $0.setPriceText(price: 28, subtitle: "/night")
+        return $0
+    }(UILabel())
+    
+    private lazy var cellRating: UILabel = uiBuilder.addLabel("⭐️ 4.8", fz: .label, color: .appWhite, lines: 1)
+    
+    private lazy var cellStackPrice: UIStackView = uiBuilder.addStack()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -19,18 +40,58 @@ final class HotelsCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        contentView.backgroundColor = .appWhite
-        //contentView.addSubviews(stackView)
+        contentView.backgroundColor = .appRed.withAlphaComponent(0.1)
+        contentView.layer.cornerRadius = 20
+        contentView.clipsToBounds = true
+        
+        cellGradient.translatesAutoresizingMaskIntoConstraints = false
+
+        cellImage.addSubview(cellGradient)
+        
+        cellStackPrice.addArrangedSubview(cellPrice)
+        cellStackPrice.addArrangedSubview(cellRating)
+        
+        contentView.addSubviews(cellImage, cellTitle, cellAddress, cellStackPrice)
         
         setupConstraints()
     }
     
     private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            cellImage.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cellImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cellImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cellImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
 
+            cellGradient.leadingAnchor.constraint(equalTo: cellImage.leadingAnchor),
+            cellGradient.trailingAnchor.constraint(equalTo: cellImage.trailingAnchor),
+            cellGradient.bottomAnchor.constraint(equalTo: cellImage.bottomAnchor),
+            cellGradient.heightAnchor.constraint(equalTo: cellImage.heightAnchor, multiplier: 0.5),
+            
+            cellTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            cellTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            cellTitle.bottomAnchor.constraint(equalTo: cellAddress.topAnchor, constant: -6),
+            
+            cellAddress.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            cellAddress.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            cellAddress.bottomAnchor.constraint(equalTo: cellStackPrice.topAnchor, constant: -6),
+            
+            cellStackPrice.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            cellStackPrice.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            cellStackPrice.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+        ])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(item: Items) {
+        self.cellTitle.text = item.name
+        self.cellImage.image = UIImage(named: item.image ?? "post-01")
+        self.cellPrice.setPriceText(price: item.price ?? 0, subtitle: "/night")
+        self.cellAddress.text = item.addressShort ?? ""
+        self.cellRating.text = "⭐️ \(item.rating ?? 0)"
     }
     
     

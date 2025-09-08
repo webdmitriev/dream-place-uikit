@@ -62,12 +62,13 @@ final class HomeViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
+        // self.changeOnboardingStatus(false)
         // output.viewDidLoad()
     }
     
     // MARK: 1 - UICollectionViewCompositionalLayout
     private func createLayout() -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout { [weak self] sectionIndex, environment in
+        let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
             guard let self else { return nil }
             
             let currentSection = self.items[sectionIndex]
@@ -76,9 +77,18 @@ final class HomeViewController: UIViewController {
             if currentSection.action {
                 section.boundarySupplementaryItems = [self.createTopHeader()]
             }
-            
+
+            if currentSection.type == .hotels {
+                let background = NSCollectionLayoutDecorationItem.background(elementKind: "background")
+                background.zIndex = -1
+                section.decorationItems = [background]
+            }
+
             return section
         }
+
+        layout.register(SectionBackgroundView.self, forDecorationViewOfKind: "background")
+        return layout
     }
 
     private func createSection(_ type: SectionType) -> NSCollectionLayoutSection {
@@ -107,6 +117,7 @@ final class HomeViewController: UIViewController {
                 return cell
             case .hotels:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HotelsCell.reuseID, for: indexPath) as! HotelsCell
+                cell.configure(item: item)
                 return cell
             }
         }
@@ -119,11 +130,9 @@ final class HomeViewController: UIViewController {
                                                                          for: indexPath) as! CollectionDiffableHeader
             
             let section = self?.items[indexPath.section]
-            header.backgroundColor = .appWhite
             header.actionCell(title: section?.title ?? "")
             return header
         }
-        
     }
     
     // MARK: 3 - create snapshot
@@ -203,10 +212,18 @@ extension HomeViewController {
     }
 
     private func createHotelsSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .absolute(280))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(280))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
-        return NSCollectionLayoutSection(group: group)
+        
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(widthDimension: .absolute(164), heightDimension: .absolute(280)),
+            repeatingSubitem: item, count: 1)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        section.interGroupSpacing = 14
+        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 20, trailing: uiBuilder.offset)
+        
+        return section
     }
 }

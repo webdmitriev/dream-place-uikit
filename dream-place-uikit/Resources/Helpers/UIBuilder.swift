@@ -29,6 +29,13 @@ final class UIBuilder {
         return imageView
     }
     
+    func addImage(_ img: String, mode: UIView.ContentMode = .scaleAspectFit) -> UIImageView {
+        let imageView = UIImageView(image: UIImage(named: img))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = mode
+        return imageView
+    }
+    
     func addLabel(_ str: String, fz: FontSize = .text, fw: UIFont.Weight = .regular,
                   color: UIColor = .appBlack, lines: Int = 0, align: NSTextAlignment = .left) -> UILabel {
         let label = UILabel()
@@ -74,7 +81,7 @@ final class UIBuilder {
         return scroll
     }
     
-    func addView(bgc: UIColor, brs: CGFloat = 0, clipsToBounds: Bool = true) -> UIView {
+    func addView(bgc: UIColor = .clear, brs: CGFloat = 0, clipsToBounds: Bool = true) -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = bgc
@@ -98,7 +105,7 @@ final class UIBuilder {
         return textField
     }
     
-    func addStackHeader() -> UIStackView {
+    func addStack() -> UIStackView {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
