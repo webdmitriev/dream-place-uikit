@@ -66,7 +66,7 @@ final class HotelsCell: UICollectionViewCell {
             cellGradient.leadingAnchor.constraint(equalTo: cellImage.leadingAnchor),
             cellGradient.trailingAnchor.constraint(equalTo: cellImage.trailingAnchor),
             cellGradient.bottomAnchor.constraint(equalTo: cellImage.bottomAnchor),
-            cellGradient.heightAnchor.constraint(equalTo: cellImage.heightAnchor, multiplier: 0.5),
+            cellGradient.heightAnchor.constraint(equalTo: cellImage.heightAnchor, multiplier: 0.7),
             
             cellTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             cellTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),

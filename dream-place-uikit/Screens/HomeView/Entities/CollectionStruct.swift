@@ -58,7 +58,7 @@ struct CollectionStruct: Hashable {
             CollectionStruct(title: "Explore Place", action: true, type: .places, items: [
                 Items(name: "Bohol",
                       image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-01.jpg"),
-                Items(name: "Chocolate Hills",
+                Items(name: "Chocolate Hills Chocolate Hills Chocolate Hills",
                       image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-02.jpg"),
                 Items(name: "Bilar",
                       image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-03.jpg"),

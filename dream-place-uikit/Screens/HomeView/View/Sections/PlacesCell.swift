@@ -12,6 +12,17 @@ final class PlacesCell: UICollectionViewCell {
     
     private let uiBuilder = UIBuilder()
     
+    private lazy var cellImage: UIImageView = uiBuilder.addImage("post-01", mode: .scaleAspectFill)
+    private lazy var cellGradient = GradientView(
+        colors: [
+            UIColor.appBlack.withAlphaComponent(0.9),
+            UIColor.clear
+        ],
+        startPoint: CGPoint(x: 0.5, y: 1.0),
+        endPoint: CGPoint(x: 0.5, y: 0.0)
+    )
+    private lazy var cellTitle: UILabel = uiBuilder.addLabel("Title", fz: .text, fw: .bold, color: .appWhite, lines: 1)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -23,13 +34,32 @@ final class PlacesCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 20
         contentView.clipsToBounds = true
         
+        cellGradient.translatesAutoresizingMaskIntoConstraints = false
+        cellImage.addSubview(cellGradient)
+        
+        cellTitle.textAlignment = .center
+        
+        contentView.addSubviews(cellImage, cellTitle)
+        
         setupConstraints()
     }
     
     private func setupConstraints() {
-//        NSLayoutConstraint.activate([
-////
-//        ])
+        NSLayoutConstraint.activate([
+            cellImage.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cellImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cellImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cellImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+
+            cellGradient.leadingAnchor.constraint(equalTo: cellImage.leadingAnchor),
+            cellGradient.trailingAnchor.constraint(equalTo: cellImage.trailingAnchor),
+            cellGradient.bottomAnchor.constraint(equalTo: cellImage.bottomAnchor),
+            cellGradient.heightAnchor.constraint(equalTo: cellImage.heightAnchor, multiplier: 0.7),
+            
+            cellTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            cellTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            cellTitle.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+        ])
     }
     
     required init?(coder: NSCoder) {
@@ -37,16 +67,12 @@ final class PlacesCell: UICollectionViewCell {
     }
     
     func configure(item: Items) {
-//        self.cellTitle.text = item.name
-//        
-//        if let imageString = item.image, let url = URL(string: imageString) {
-//            self.cellImage.load(url: url)
-//        } else {
-//            self.cellImage.image = UIImage(named: "post-01")
-//        }
-//        
-//        self.cellPrice.setPriceText(price: item.price ?? 0, subtitle: "/night")
-//        self.cellAddress.text = item.addressShort ?? ""
-//        self.cellRating.text = "⭐️ \(item.rating ?? 0)"
+        self.cellTitle.text = item.name
+        
+        if let imageString = item.image, let url = URL(string: imageString) {
+            self.cellImage.load(url: url)
+        } else {
+            self.cellImage.image = UIImage(named: "post-01")
+        }
     }
 }

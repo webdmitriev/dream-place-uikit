@@ -189,6 +189,9 @@ extension HomeViewController: UICollectionViewDelegate {
         case .hotels:
             let detailsVC = HotelDetailsView(item: item)
             navigationController?.pushViewController(detailsVC, animated: true)
+        case .places:
+            let detailsVC = PlaceDetailsView(item: item)
+            navigationController?.pushViewController(detailsVC, animated: true)
         default:
             break
         }
@@ -240,9 +243,9 @@ extension HomeViewController {
             repeatingSubitem: item, count: 1)
 
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
+        section.orthogonalScrollingBehavior = .groupPaging
         section.interGroupSpacing = 14
-        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 0, trailing: uiBuilder.offset)
+        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 10, trailing: uiBuilder.offset)
         
         return section
     }
@@ -256,9 +259,9 @@ extension HomeViewController {
             repeatingSubitem: item, count: 1)
 
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
+        section.orthogonalScrollingBehavior = .groupPaging
         section.interGroupSpacing = 14
-        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 0, trailing: uiBuilder.offset)
+        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 40, trailing: uiBuilder.offset)
         
         return section
     }
