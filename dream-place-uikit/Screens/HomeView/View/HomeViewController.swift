@@ -37,6 +37,7 @@ final class HomeViewController: UIViewController {
         $0.register(HeaderCell.self, forCellWithReuseIdentifier: HeaderCell.reuseID)
         $0.register(SearchCell.self, forCellWithReuseIdentifier: SearchCell.reuseID)
         $0.register(HotelsCell.self, forCellWithReuseIdentifier: HotelsCell.reuseID)
+        $0.register(PlacesCell.self, forCellWithReuseIdentifier: PlacesCell.reuseID)
         
         $0.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
@@ -99,6 +100,8 @@ final class HomeViewController: UIViewController {
             return createSearchSection()
         case .hotels:
             return createHotelsSection()
+        case .places:
+            return createPlacesSection()
         }
     }
 
@@ -117,6 +120,10 @@ final class HomeViewController: UIViewController {
                 return cell
             case .hotels:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HotelsCell.reuseID, for: indexPath) as! HotelsCell
+                cell.configure(item: item)
+                return cell
+            case .places:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlacesCell.reuseID, for: indexPath) as! PlacesCell
                 cell.configure(item: item)
                 return cell
             }
@@ -174,6 +181,19 @@ extension HomeViewController: UICollectionViewDelegate {
         updateBackgroundHeight(for: offsetY, percentage: scrollPercentage)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let sectionType = items[indexPath.section].type
+        let item = items[indexPath.section].items[indexPath.item]
+        
+        switch sectionType {
+        case .hotels:
+            let detailsVC = HotelDetailsView(item: item)
+            navigationController?.pushViewController(detailsVC, animated: true)
+        default:
+            break
+        }
+    }
+    
     private func updateBackgroundHeight(for offsetY: CGFloat, percentage: CGFloat) {
         let newHeight = headerImageHeight - offsetY * 0.5
         headerImage.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: newHeight)
@@ -222,7 +242,23 @@ extension HomeViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         section.interGroupSpacing = 14
-        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 20, trailing: uiBuilder.offset)
+        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 0, trailing: uiBuilder.offset)
+        
+        return section
+    }
+    
+    private func createPlacesSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(164))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(widthDimension: .absolute(164), heightDimension: .absolute(164)),
+            repeatingSubitem: item, count: 1)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        section.interGroupSpacing = 14
+        section.contentInsets = .init(top: 20, leading: uiBuilder.offset, bottom: 0, trailing: uiBuilder.offset)
         
         return section
     }

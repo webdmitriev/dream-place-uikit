@@ -12,7 +12,7 @@ final class HotelsCell: UICollectionViewCell {
     
     private let uiBuilder = UIBuilder()
     
-    private lazy var cellImage: UIImageView = uiBuilder.addImage("post-01", mode: .scaleToFill)
+    private lazy var cellImage: UIImageView = uiBuilder.addImage("post-01", mode: .scaleAspectFill)
     private lazy var cellGradient = GradientView(
         colors: [
             UIColor.appBlack.withAlphaComponent(0.9),
@@ -78,7 +78,7 @@ final class HotelsCell: UICollectionViewCell {
             
             cellStackPrice.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             cellStackPrice.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            cellStackPrice.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+            cellStackPrice.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
         ])
     }
     
@@ -88,7 +88,13 @@ final class HotelsCell: UICollectionViewCell {
     
     func configure(item: Items) {
         self.cellTitle.text = item.name
-        self.cellImage.image = UIImage(named: item.image ?? "post-01")
+        
+        if let imageString = item.image, let url = URL(string: imageString) {
+            self.cellImage.load(url: url)
+        } else {
+            self.cellImage.image = UIImage(named: "post-01")
+        }
+        
         self.cellPrice.setPriceText(price: item.price ?? 0, subtitle: "/night")
         self.cellAddress.text = item.addressShort ?? ""
         self.cellRating.text = "⭐️ \(item.rating ?? 0)"
