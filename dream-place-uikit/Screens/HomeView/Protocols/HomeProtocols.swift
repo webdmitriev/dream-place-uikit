@@ -18,6 +18,7 @@ protocol HomeViewInput: AnyObject {
 protocol HomeViewOutput: AnyObject {
     func viewDidLoad()
     func didSelectHotel(at hotel: Hotel)
+    func changeOnboardingStatus(_ status: Bool)
 }
 
 

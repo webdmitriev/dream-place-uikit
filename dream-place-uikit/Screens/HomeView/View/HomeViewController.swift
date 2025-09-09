@@ -63,7 +63,7 @@ final class HomeViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        // self.changeOnboardingStatus(false)
+        // output.changeOnboardingStatus(false)
         // output.viewDidLoad()
     }
     
@@ -163,10 +163,6 @@ extension HomeViewController: HomeViewInput {
     
     func displayError(_ error: any Error) {
         print(error.localizedDescription)
-    }
-    
-    private func changeOnboardingStatus(_ status: Bool) {
-        UserDefaults.standard.set(status, forKey: "onboardingCompleted")
     }
 }
 

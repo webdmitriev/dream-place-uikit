@@ -24,4 +24,8 @@ class HomePresenter: HomeViewOutput, HomeInteractorOutput {
     func fetchHotels(_ hotels: [Hotel]) {
         view?.displayHotels(hotels)
     }
+    
+    func changeOnboardingStatus(_ status: Bool) {
+        UserDefaults.standard.set(status, forKey: "onboardingCompleted")
+    }
 }
