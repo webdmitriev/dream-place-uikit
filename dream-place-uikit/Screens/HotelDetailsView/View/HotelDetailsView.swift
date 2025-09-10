@@ -14,6 +14,7 @@ final class HotelDetailsView: UIViewController {
     private let uiBuilder = UIBuilder()
     private var imageHeightConstraint: NSLayoutConstraint!
     private var imageTopConstraint: NSLayoutConstraint!
+    private var isDescriptionExpanded = false
 
     // UI элементы
     private lazy var scrollView: UIScrollView = uiBuilder.addScrollView(bgc: .appBg)
@@ -31,7 +32,20 @@ final class HotelDetailsView: UIViewController {
     private lazy var addressLabel: UILabel = uiBuilder.addLabel("address", fz: .text, color: .appGray, lines: 3)
 
     private lazy var descrTitleLabel: UILabel = uiBuilder.addLabel("About Us", fz: .header, color: .appBlack, lines: 1)
-    private lazy var descrLabel: UILabel = uiBuilder.addLabel("descr", fz: .text, fw: .medium, color: .appGrayText, lines: 0)
+    private lazy var descrLabel: UILabel = {
+        let label = uiBuilder.addLabel("descr", fz: .text, fw: .medium, color: .appGrayText, lines: 8)
+        label.lineBreakMode = .byTruncatingTail
+        return label
+    }()
+    private lazy var showMoreButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setTitle("Read more", for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        btn.tintColor = .systemBlue
+        btn.addTarget(self, action: #selector(toggleDescription), for: .touchUpInside)
+        return btn
+    }()
     
     private lazy var facilitiesTitle: UILabel = uiBuilder.addLabel("Services & Facilities",
                                                                    fz: .header, color: .appBlack, lines: 1)
@@ -94,6 +108,13 @@ final class HotelDetailsView: UIViewController {
         setupCustomBackButton()
         setupTransparentNavigationBar()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        let maxHeight = descrLabel.font.lineHeight * 8
+        showMoreButton.isHidden = descrLabel.bounds.height <= maxHeight
+    }
 
     // MARK: - Setup UI
     private func setupUI() {
@@ -104,7 +125,7 @@ final class HotelDetailsView: UIViewController {
         contentView.addSubview(imageView)
         imageView.addSubview(cellGradient)
         
-        contentView.addSubviews(titleLabel, addressLabel, descrTitleLabel, descrLabel, facilitiesTitle)
+        contentView.addSubviews(titleLabel, addressLabel, descrTitleLabel, facilitiesTitle)
 
         // scrollView + contentView constraints
         NSLayoutConstraint.activate([
@@ -149,20 +170,28 @@ final class HotelDetailsView: UIViewController {
             addressLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -24),
         ])
 
-        // desrTitleLabel + desrLabel
+        // descrTitleLabel
         NSLayoutConstraint.activate([
             descrTitleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 24),
             descrTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
             descrTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
-            
+        ])
+        
+        contentView.addSubviews(descrLabel, showMoreButton)
+        showMoreButton.backgroundColor = .appBg
+        NSLayoutConstraint.activate([
             descrLabel.topAnchor.constraint(equalTo: descrTitleLabel.bottomAnchor, constant: 8),
             descrLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
             descrLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
+            
+            showMoreButton.bottomAnchor.constraint(equalTo: descrLabel.bottomAnchor, constant: 6),
+            showMoreButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
         ])
+
         
         // facilitiesTitle
         NSLayoutConstraint.activate([
-            facilitiesTitle.topAnchor.constraint(equalTo: descrLabel.bottomAnchor, constant: 24),
+            facilitiesTitle.topAnchor.constraint(equalTo: descrLabel.bottomAnchor, constant: 34),
             facilitiesTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
             facilitiesTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
         ])
@@ -327,6 +356,31 @@ final class HotelDetailsView: UIViewController {
     private func bookNowTapped() {
         print("bookNowTapped")
     }
+    
+    @objc
+    private func toggleDescription() {
+        isDescriptionExpanded.toggle()
+        
+        if isDescriptionExpanded {
+            descrLabel.numberOfLines = 0
+            UIView.animate(withDuration: 0.25) {
+                self.showMoreButton.alpha = 0
+                self.view.layoutIfNeeded()
+            } completion: { _ in
+                self.showMoreButton.isHidden = true
+            }
+        } else {
+            descrLabel.numberOfLines = 8
+            showMoreButton.isHidden = false
+            showMoreButton.alpha = 0
+            showMoreButton.setTitle("Read more", for: .normal)
+            UIView.animate(withDuration: 0.25) {
+                self.showMoreButton.alpha = 1
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+
 }
 
 extension HotelDetailsView: UIScrollViewDelegate {
