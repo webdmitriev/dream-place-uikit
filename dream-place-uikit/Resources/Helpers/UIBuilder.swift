@@ -48,10 +48,10 @@ final class UIBuilder {
         return label
     }
     
-    func addButton(_ text: String, color: UIColor = .appWhite, bgc: UIColor = .appBlue) -> UIButton {
+    func addButton(_ text: String, height: Bool = true, color: UIColor = .appWhite, bgc: UIColor = .appBlue) -> UIButton {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 48).isActive = height
         button.setTitle(text, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: FontSize.btn.rawValue, weight: .medium)
         button.setTitleColor(color, for: .normal)
@@ -72,7 +72,7 @@ final class UIBuilder {
         return button
     }
     
-    func addScrollView(bgc: UIColor) -> UIScrollView {
+    func addScrollView(bgc: UIColor = .appBg) -> UIScrollView {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.contentInsetAdjustmentBehavior = .never
@@ -105,12 +105,12 @@ final class UIBuilder {
         return textField
     }
     
-    func addStack() -> UIStackView {
+    func addStack(axis: NSLayoutConstraint.Axis = .horizontal, distribution: UIStackView.Distribution = .equalSpacing, spacing: CGFloat = 16) -> UIStackView {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.distribution = .equalSpacing
-        stack.spacing = 16
+        stack.axis = axis
+        stack.distribution = distribution
+        stack.spacing = spacing
         return stack
     }
     

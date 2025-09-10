@@ -184,9 +184,11 @@ extension HomeViewController: UICollectionViewDelegate {
         switch sectionType {
         case .hotels:
             let detailsVC = HotelDetailsView(item: item)
+            detailsVC.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(detailsVC, animated: true)
         case .places:
             let detailsVC = PlaceDetailsView(item: item)
+            detailsVC.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(detailsVC, animated: true)
         default:
             break

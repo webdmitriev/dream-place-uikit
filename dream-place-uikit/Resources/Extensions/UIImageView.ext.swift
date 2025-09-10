@@ -19,4 +19,10 @@ extension UIImageView {
             }
         }
     }
+    
+    func applyBottomCornerRadius(_ radius: CGFloat) {
+        self.layer.cornerRadius = radius
+        self.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        self.clipsToBounds = true
+    }
 }

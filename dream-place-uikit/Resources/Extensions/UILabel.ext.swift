@@ -8,12 +8,12 @@
 import UIKit
 
 extension UILabel {
-    func setPriceText(price: Int, subtitle: String) {
+    func setPriceText(price: Int, subtitle: String, priceFZ: CGFloat = 15, color: UIColor = .appWhite) {
         let fullText = NSMutableAttributedString(
             string: "$\(price)",
             attributes: [
-                .font: UIFont.systemFont(ofSize: 15, weight: .bold),
-                .foregroundColor: UIColor.appWhite
+                .font: UIFont.systemFont(ofSize: priceFZ, weight: .bold),
+                .foregroundColor: color
             ]
         )
         
@@ -21,7 +21,7 @@ extension UILabel {
             string: "\(subtitle)",
             attributes: [
                 .font: UIFont.systemFont(ofSize: 14, weight: .regular),
-                .foregroundColor: UIColor.appWhite
+                .foregroundColor: color
             ]
         ))
         
