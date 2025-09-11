@@ -76,6 +76,18 @@ final class HotelDetailsView: UIViewController {
         return stack
     }()
     
+    // MARK: - Gallery preview
+    private lazy var galleryStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.alignment = .center
+        stack.distribution = .fillEqually
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.isUserInteractionEnabled = true
+        return stack
+    }()
+    
     // MARK: - Bottom block
     private lazy var bottomBlock: UIView = uiBuilder.addView(bgc: .appWhite, clipsToBounds: true)
     private lazy var btnBookNow: UIButton = uiBuilder.addButton("Book Now", height: false, color: .appWhite, bgc: .appBlue)
@@ -105,6 +117,7 @@ final class HotelDetailsView: UIViewController {
         
         setupUI()
         configureUI()
+        setupGallery()
         setupCustomBackButton()
         setupTransparentNavigationBar()
     }
@@ -158,15 +171,23 @@ final class HotelDetailsView: UIViewController {
             cellGradient.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
             cellGradient.heightAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 0.7),
         ])
+        
+        contentView.addSubview(galleryStack)
+        NSLayoutConstraint.activate([
+            galleryStack.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -16),
+            galleryStack.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -24),
+            galleryStack.widthAnchor.constraint(equalToConstant: 60),
+            galleryStack.heightAnchor.constraint(equalToConstant: 190),
+        ])
 
         // titleLabel + addressLabel
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
+            titleLabel.trailingAnchor.constraint(equalTo: galleryStack.leadingAnchor, constant: -uiBuilder.offset),
             titleLabel.bottomAnchor.constraint(equalTo: addressLabel.topAnchor, constant: -16),
             
             addressLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
-            addressLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
+            addressLabel.trailingAnchor.constraint(equalTo: galleryStack.leadingAnchor, constant: -uiBuilder.offset),
             addressLabel.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -24),
         ])
 
@@ -188,7 +209,6 @@ final class HotelDetailsView: UIViewController {
             showMoreButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
         ])
 
-        
         // facilitiesTitle
         NSLayoutConstraint.activate([
             facilitiesTitle.topAnchor.constraint(equalTo: descrLabel.bottomAnchor, constant: 34),
@@ -247,6 +267,29 @@ final class HotelDetailsView: UIViewController {
         } else {
             imageView.image = UIImage(named: "post-01")
         }
+        
+        if let gallery = item.gallery {
+            galleryStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+            for (index, urlString) in gallery.prefix(3).enumerated() {
+                let thumb = UIImageView()
+                thumb.contentMode = .scaleAspectFill
+                thumb.clipsToBounds = true
+                thumb.layer.cornerRadius = 8
+                thumb.isUserInteractionEnabled = true
+                thumb.tag = index
+                
+                if let url = URL(string: urlString) {
+                    thumb.load(url: url)
+                }
+
+                let tap = UITapGestureRecognizer(target: self, action: #selector(galleryImageTapped(_:)))
+                thumb.addGestureRecognizer(tap)
+
+                galleryStack.addArrangedSubview(thumb)
+            }
+        }
+
 
         // --- Facilities
         guard let facilities = item.facilities else { return }
@@ -290,8 +333,50 @@ final class HotelDetailsView: UIViewController {
         stack.alignment = .center
         return stack
     }
-
     
+    private func setupGallery() {
+        guard let gallery = item.gallery else { return }
+        
+        galleryStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        for (index, urlString) in gallery.prefix(3).enumerated() {
+            let thumb = UIImageView()
+            thumb.image = UIImage(named: "post-01")
+            thumb.contentMode = .scaleAspectFill
+            thumb.clipsToBounds = true
+            thumb.layer.cornerRadius = 6
+            thumb.isUserInteractionEnabled = true
+            thumb.tag = index
+
+            // загрузка картинки
+            if let url = URL(string: urlString) {
+                thumb.load(url: url)
+            }
+
+            // жест
+            let tap = UITapGestureRecognizer(target: self, action: #selector(galleryImageTapped(_:)))
+            thumb.addGestureRecognizer(tap)
+
+            galleryStack.addArrangedSubview(thumb)
+        }
+        
+        highlightThumbnail(at: 0)
+    }
+    
+    // highlightThumbnail
+    private func highlightThumbnail(at index: Int) {
+        for (i, subview) in galleryStack.arrangedSubviews.enumerated() {
+            guard let img = subview as? UIImageView else { continue }
+            if i == index {
+                img.layer.borderWidth = 2
+                img.layer.borderColor = UIColor.appBlue.cgColor
+            } else {
+                img.layer.borderWidth = 2
+                img.layer.borderColor = UIColor.appWhite.cgColor
+            }
+        }
+    }
+
     // MARK: - Navigation
     private func setupCustomBackButton() {
         // Создаем кастомную кнопку
@@ -341,6 +426,18 @@ final class HotelDetailsView: UIViewController {
         // Дополнительные настройки
         navigationController?.navigationBar.isTranslucent = true
     }
+    
+    @objc
+    private func galleryImageTapped(_ sender: UITapGestureRecognizer) {
+        guard let view = sender.view else { return }
+        let index = view.tag
+        
+        if let urlString = item.gallery?[index], let url = URL(string: urlString) {
+            imageView.load(url: url)
+            highlightThumbnail(at: index)
+        }
+    }
+
     
     @objc
     private func backButtonTapped() {
