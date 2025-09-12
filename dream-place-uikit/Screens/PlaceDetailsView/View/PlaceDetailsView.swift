@@ -32,6 +32,13 @@ final class PlaceDetailsView: UIViewController {
     
     private lazy var addressImage: UIImageView = uiBuilder.addImage("icon-location", mode: .scaleAspectFit)
     private lazy var addressBtn: UIButton = uiBuilder.addButton("Address", height: false, bgc: .clear)
+    
+    private lazy var avatarsView: UIView = uiBuilder.addView(bgc: .clear)
+    private lazy var avatar01: UIImageView = uiBuilder.addImage("avatar-01", mode: .scaleAspectFill)
+    private lazy var avatar02: UIImageView = uiBuilder.addImage("avatar-02", mode: .scaleAspectFill)
+    private lazy var avatar03: UIImageView = uiBuilder.addImage("avatar-03", mode: .scaleAspectFill)
+    private lazy var avatar04: UIImageView = uiBuilder.addImage("avatar-04", mode: .scaleAspectFill)
+    private lazy var avatar05: UIImageView = uiBuilder.addImage("avatar-05", mode: .scaleAspectFill)
 
     // MARK: - Init
     init(item: Items) {
@@ -65,12 +72,21 @@ final class PlaceDetailsView: UIViewController {
         scrollView.delaysContentTouches = false
         scrollView.canCancelContentTouches = false
         
-        contentView.addSubviews(titleLabel, ratingLabel, addressImage, addressBtn)
+        contentView.addSubviews(titleLabel, ratingLabel, addressImage, addressBtn, avatarsView)
         
         addressImage.widthAnchor.constraint(equalToConstant: 18).isActive = true
         addressImage.heightAnchor.constraint(equalToConstant: 18).isActive = true
         addressBtn.contentHorizontalAlignment = .left
         addressBtn.addTarget(self, action: #selector(handleAddressBtnTapped), for: .touchUpInside)
+        
+        avatarsView.addSubviews(avatar01, avatar02, avatar03, avatar04, avatar05)
+        [avatar01, avatar02, avatar03, avatar04, avatar05].forEach {
+            $0.widthAnchor.constraint(equalToConstant: 28).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 28).isActive = true
+            $0.layer.borderWidth = 2
+            $0.layer.borderColor = UIColor.appWhite.cgColor
+            $0.layer.cornerRadius = 14
+        }
 
         // scrollView + contentView constraints
         NSLayoutConstraint.activate([
@@ -117,11 +133,32 @@ final class PlaceDetailsView: UIViewController {
             addressBtn.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             addressBtn.leadingAnchor.constraint(equalTo: addressImage.trailingAnchor, constant: 8),
             addressBtn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
+            
+            avatarsView.topAnchor.constraint(equalTo: addressBtn.bottomAnchor, constant: 16),
+            avatarsView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
+            avatarsView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
+            avatarsView.bottomAnchor.constraint(equalTo: avatar01.bottomAnchor),
+            
+            avatar01.topAnchor.constraint(equalTo: avatarsView.topAnchor),
+            avatar01.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor),
+            
+            avatar02.topAnchor.constraint(equalTo: avatarsView.topAnchor),
+            avatar02.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 14),
+            
+            avatar03.topAnchor.constraint(equalTo: avatarsView.topAnchor),
+            avatar03.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 28),
+            
+            avatar04.topAnchor.constraint(equalTo: avatarsView.topAnchor),
+            avatar04.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 42),
+            
+            avatar05.topAnchor.constraint(equalTo: avatarsView.topAnchor),
+            avatar05.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 56),
+            
         ])
         
         // contentView -> bottomAnchor
         NSLayoutConstraint.activate([
-            contentView.bottomAnchor.constraint(equalTo: addressBtn.bottomAnchor, constant: uiBuilder.offset)
+            contentView.bottomAnchor.constraint(equalTo: avatarsView.bottomAnchor, constant: uiBuilder.offset)
         ])
     }
 
