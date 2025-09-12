@@ -103,16 +103,21 @@ struct CollectionStruct: Hashable {
                       price: 19, rating: 4.6)
             ]),
             CollectionStruct(title: "Explore Place", action: true, type: .places, items: [
+                Items(name: "Chocolate Hills",
+                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/09/chocolate-hills-01.jpg",
+                      address: "Towns of Carmen, Batuan and Sagbayan, Bohol", rating: 5.0),
                 Items(name: "Bohol",
-                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-01.jpg"),
-                Items(name: "Chocolate Hills Chocolate Hills Chocolate Hills",
-                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-02.jpg"),
+                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-02.jpg",
+                      address: "Barangay Danao, Panglao Island, Bohol, 6340", rating: 5.0),
                 Items(name: "Bilar",
-                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-03.jpg"),
+                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-03.jpg",
+                      address: "Barangay Danao, Panglao Island, Bohol, 6340", rating: 5.0),
                 Items(name: "Panglao",
-                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-04.jpg"),
+                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-04.jpg",
+                      address: "Barangay Danao, Panglao Island, Bohol, 6340", rating: 5.0),
                 Items(name: "Tarsier",
-                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-05.jpg"),
+                      image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-05.jpg",
+                      address: "Barangay Danao, Panglao Island, Bohol, 6340", rating: 5.0),
             ])
         ]
     }

@@ -11,6 +11,7 @@ final class UIBuilder {
     
     enum FontSize: CGFloat {
         case onboardingTitle = 32
+        case placeTitle = 28
         case header = 22
         case title = 20
         case text = 16
@@ -33,6 +34,7 @@ final class UIBuilder {
         let imageView = UIImageView(image: UIImage(named: img))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = mode
+        imageView.clipsToBounds = true
         return imageView
     }
     
