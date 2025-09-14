@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class PlaceDetailsView: UIViewController {
 
@@ -13,6 +14,9 @@ final class PlaceDetailsView: UIViewController {
     private let item: Items
     private let uiBuilder = UIBuilder()
     private let height: CGFloat = UIScreen.main.bounds.height
+
+    private lazy var latitude: Double = 0
+    private lazy var longitude: Double = 0
 
     // UI элементы
     private lazy var scrollView: UIScrollView = uiBuilder.addScrollView(bgc: .clear)
@@ -211,6 +215,11 @@ final class PlaceDetailsView: UIViewController {
         descrLabel.setLineHeight(28)
         bottomPrice.setPriceText(price: item.price ?? 0, subtitle: "/person", priceFZ: 24, textFZ: 18)
         
+        if let coord = item.coordinate {
+            latitude = coord.latitude
+            longitude = coord.longitude
+        }
+        
         if let imageString = item.image, let url = URL(string: imageString) {
             imageView.load(url: url)
         } else {
@@ -284,7 +293,10 @@ final class PlaceDetailsView: UIViewController {
     }
 
     @objc private func mapButtonTapped() {
-        print("🗺️ Открыть карту")
+        let mapVC = MapPlaceController()
+        mapVC.hidesBottomBarWhenPushed = true
+        mapVC.pendingDestination = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        navigationController?.pushViewController(mapVC, animated: true)
     }
     
     @objc

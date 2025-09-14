@@ -148,6 +148,8 @@
 				DEVELOPMENT_TEAM = 6LSSFY6N8C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "dream-place-uikit/Info.plist";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Для определения гео позиции и расчёта пути от вашей локации до места назначения (отеля или места посещения)";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Для определения гео позиции и расчёта пути от вашей локации до места назначения (отеля или места посещения)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -180,6 +182,8 @@
 				DEVELOPMENT_TEAM = 6LSSFY6N8C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "dream-place-uikit/Info.plist";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Для определения гео позиции и расчёта пути от вашей локации до места назначения (отеля или места посещения)";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Для определения гео позиции и расчёта пути от вашей локации до места назначения (отеля или места посещения)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

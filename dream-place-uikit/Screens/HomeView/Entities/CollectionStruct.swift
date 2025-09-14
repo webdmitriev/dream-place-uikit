@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 enum SectionType {
     case header
@@ -26,6 +27,14 @@ struct Items: Hashable, Identifiable {
     var facilities: [String]?
     var price: Int?
     var rating: Double?
+    
+    var latitude: Double?
+    var longitude: Double?
+    
+    var coordinate: CLLocationCoordinate2D? {
+        guard let latitude, let longitude else { return nil }
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
 }
 
 struct CollectionStruct: Hashable {
@@ -107,12 +116,12 @@ struct CollectionStruct: Hashable {
                       image: "https://api.webdmitriev.com/wp-content/uploads/2025/09/chocolate-hills-01.jpg",
                       address: "Towns of Carmen, Batuan and Sagbayan, Bohol",
                       descr: "Bohol, an enchanting island province in the Philippines, is renowned for its stunning natural landscapes and unique wildlife. \n\nOne of its most iconic attractions is the Chocolate Hills, a geological formation consisting of over 1,200 perfectly cone-shaped hills that turn brown during the dry season, resembling mounds of chocolate. This breathtaking sight is best appreciated from the viewing deck at Chocolate Hills Complex, where visitors can capture panoramic views and learn about the hills’ geological history. \n\nIn addition to the Chocolate Hills, Bohol is home to the world’s smallest primate, the Philippine Tarsier. These adorable creatures, with their large eyes and tiny bodies, can be observed in their natural habitat at the Tarsier Sanctuary in Corella. Here, conservation efforts are in place to protect these fascinating animals while providing visitors with the opportunity to learn about their behavior and ecology.",
-                      price: 3, rating: 5.0),
-                Items(name: "Bohol",
+                      price: 3, rating: 5.0, latitude: 9.91855, longitude: 124.09363),
+                Items(name: "Carmen",
                       image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-02.jpg",
                       address: "Barangay Danao, Panglao Island, Bohol, 6340",
                       descr: "Bohol, an enchanting island province in the Philippines, is renowned for its stunning natural landscapes and unique wildlife. \n\nOne of its most iconic attractions is the Chocolate Hills, a geological formation consisting of over 1,200 perfectly cone-shaped hills that turn brown during the dry season, resembling mounds of chocolate. This breathtaking sight is best appreciated from the viewing deck at Chocolate Hills Complex, where visitors can capture panoramic views and learn about the hills’ geological history. \n\nIn addition to the Chocolate Hills, Bohol is home to the world’s smallest primate, the Philippine Tarsier. These adorable creatures, with their large eyes and tiny bodies, can be observed in their natural habitat at the Tarsier Sanctuary in Corella. Here, conservation efforts are in place to protect these fascinating animals while providing visitors with the opportunity to learn about their behavior and ecology.",
-                      price: 4, rating: 5.0),
+                      price: 4, rating: 5.0, latitude: 9.84985, longitude: 124.17684),
                 Items(name: "Bilar",
                       image: "https://api.webdmitriev.com/wp-content/uploads/2025/05/boholano-house-04-03.jpg",
                       address: "Barangay Danao, Panglao Island, Bohol, 6340",
