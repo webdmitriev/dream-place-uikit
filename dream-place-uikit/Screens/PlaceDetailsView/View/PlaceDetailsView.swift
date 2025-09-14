@@ -39,6 +39,19 @@ final class PlaceDetailsView: UIViewController {
     private lazy var avatar03: UIImageView = uiBuilder.addImage("avatar-03", mode: .scaleAspectFill)
     private lazy var avatar04: UIImageView = uiBuilder.addImage("avatar-04", mode: .scaleAspectFill)
     private lazy var avatar05: UIImageView = uiBuilder.addImage("avatar-05", mode: .scaleAspectFill)
+    
+    private lazy var avatarText: UILabel = uiBuilder.addLabel("", lines: 1)
+    
+    private lazy var descrLabel: UILabel = uiBuilder.addLabel("", fz: .text, color: .appWhite, lines: 0)
+    
+    // MARK: - Bottom block
+    private lazy var bottomBlock: UIView = uiBuilder.addView(bgc: .clear, clipsToBounds: true)
+    private lazy var btnBookNow: UIButton = uiBuilder.addButton("Explore", height: false, color: .appWhite, bgc: .appBlue)
+    private lazy var bottomPrice: UILabel = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setPriceText(price: 0, subtitle: "/person", priceFZ: 24, textFZ: 18)
+        return $0
+    }(UILabel())
 
     // MARK: - Init
     init(item: Items) {
@@ -64,22 +77,19 @@ final class PlaceDetailsView: UIViewController {
     // MARK: - Setup UI
     private func setupUI() {
         view.backgroundColor = .appBg
-        view.addSubviews(imageView, scrollView)
+        view.addSubviews(imageView, scrollView, bottomBlock)
 
         imageView.addSubview(cellGradient)
         scrollView.addSubview(contentView)
         
-        scrollView.delaysContentTouches = false
-        scrollView.canCancelContentTouches = false
-        
-        contentView.addSubviews(titleLabel, ratingLabel, addressImage, addressBtn, avatarsView)
+        contentView.addSubviews(titleLabel, ratingLabel, addressImage, addressBtn, avatarsView, descrLabel)
         
         addressImage.widthAnchor.constraint(equalToConstant: 18).isActive = true
         addressImage.heightAnchor.constraint(equalToConstant: 18).isActive = true
         addressBtn.contentHorizontalAlignment = .left
         addressBtn.addTarget(self, action: #selector(handleAddressBtnTapped), for: .touchUpInside)
         
-        avatarsView.addSubviews(avatar01, avatar02, avatar03, avatar04, avatar05)
+        avatarsView.addSubviews(avatar01, avatar02, avatar03, avatar04, avatar05, avatarText)
         [avatar01, avatar02, avatar03, avatar04, avatar05].forEach {
             $0.widthAnchor.constraint(equalToConstant: 28).isActive = true
             $0.heightAnchor.constraint(equalToConstant: 28).isActive = true
@@ -87,13 +97,13 @@ final class PlaceDetailsView: UIViewController {
             $0.layer.borderColor = UIColor.appWhite.cgColor
             $0.layer.cornerRadius = 14
         }
-
+        
         // scrollView + contentView constraints
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
 
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -116,9 +126,8 @@ final class PlaceDetailsView: UIViewController {
             cellGradient.heightAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 0.9),
         ])
 
-        // titleLabel + ratingLabel + addressImage + addressBtn
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: height / 1.8),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: height / 2),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
             titleLabel.trailingAnchor.constraint(equalTo: ratingLabel.leadingAnchor, constant: -uiBuilder.offset),
             
@@ -143,23 +152,53 @@ final class PlaceDetailsView: UIViewController {
             avatar01.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor),
             
             avatar02.topAnchor.constraint(equalTo: avatarsView.topAnchor),
-            avatar02.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 14),
+            avatar02.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 16),
             
             avatar03.topAnchor.constraint(equalTo: avatarsView.topAnchor),
-            avatar03.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 28),
+            avatar03.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 32),
             
             avatar04.topAnchor.constraint(equalTo: avatarsView.topAnchor),
-            avatar04.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 42),
+            avatar04.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 48),
             
             avatar05.topAnchor.constraint(equalTo: avatarsView.topAnchor),
-            avatar05.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 56),
+            avatar05.leadingAnchor.constraint(equalTo: avatarsView.leadingAnchor, constant: 64),
+            
+            avatarText.centerYAnchor.constraint(equalTo: avatarsView.centerYAnchor),
+            avatarText.leadingAnchor.constraint(equalTo: avatar05.trailingAnchor, constant: 12),
+            avatarText.trailingAnchor.constraint(equalTo: avatarsView.trailingAnchor, constant: 0),
+            
+            descrLabel.topAnchor.constraint(equalTo: avatarsView.bottomAnchor, constant: 16),
+            descrLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
+            descrLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -uiBuilder.offset),
+            
+
+            descrLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
             
         ])
         
-        // contentView -> bottomAnchor
+        // bottomBlock + labelPrice + bottomPrice + btnBookNow
+        bottomBlock.applyShadow()
+        bottomBlock.addSubviews(bottomPrice, btnBookNow)
+        btnBookNow.addTarget(self, action: #selector(bookNowTapped), for: .touchUpInside)
+
         NSLayoutConstraint.activate([
-            contentView.bottomAnchor.constraint(equalTo: avatarsView.bottomAnchor, constant: uiBuilder.offset)
+            bottomBlock.heightAnchor.constraint(equalToConstant: 92),
+            bottomBlock.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomBlock.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomBlock.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            
+            bottomPrice.centerYAnchor.constraint(equalTo: btnBookNow.centerYAnchor),
+            bottomPrice.leadingAnchor.constraint(equalTo: bottomBlock.leadingAnchor, constant: uiBuilder.offset),
+            bottomPrice.trailingAnchor.constraint(equalTo: btnBookNow.leadingAnchor, constant: -14),
+            
+            btnBookNow.topAnchor.constraint(equalTo: bottomBlock.topAnchor, constant: 10),
+            btnBookNow.trailingAnchor.constraint(equalTo: bottomBlock.trailingAnchor, constant: -uiBuilder.offset),
+            btnBookNow.widthAnchor.constraint(equalToConstant: 140),
+            btnBookNow.heightAnchor.constraint(equalToConstant: 48)
         ])
+        
+        scrollView.contentInset.bottom = 50
+
     }
 
     // MARK: - Configure
@@ -167,6 +206,10 @@ final class PlaceDetailsView: UIViewController {
         titleLabel.text = item.name
         ratingLabel.text = "⭐️ \(item.rating ?? 0)"
         addressBtn.setTitle("\(item.address ?? "")", for: .normal)
+        avatarText.setBoldText(bold: "99+", text: "people have adventures here")
+        descrLabel.text = item.descr ?? " "
+        descrLabel.setLineHeight(28)
+        bottomPrice.setPriceText(price: item.price ?? 0, subtitle: "/person", priceFZ: 24, textFZ: 18)
         
         if let imageString = item.image, let url = URL(string: imageString) {
             imageView.load(url: url)
@@ -247,5 +290,10 @@ final class PlaceDetailsView: UIViewController {
     @objc
     private func handleAddressBtnTapped() {
         print("handleAddressBtnTapped")
+    }
+    
+    @objc
+    private func bookNowTapped() {
+        print("bookNowTapped")
     }
 }
