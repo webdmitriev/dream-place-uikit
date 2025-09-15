@@ -9,6 +9,28 @@ import UIKit
 import CoreLocation
 import MapKit
 
+class RouteAnnotation: MKPointAnnotation {
+    enum `Type` {
+        case source
+        case destination
+    }
+    
+    let type: Type
+    
+    init(coordinate: CLLocationCoordinate2D, type: Type) {
+        self.type = type
+        super.init()
+        self.coordinate = coordinate
+        
+        switch type {
+        case .source:
+            self.title = "I'm here"
+        case .destination:
+            self.title = "Destination"
+        }
+    }
+}
+
 final class MapPlaceController: UIViewController {
     
     private var currentLocation: CLLocationCoordinate2D?
@@ -47,13 +69,17 @@ final class MapPlaceController: UIViewController {
         }
 
         // Создаем плейсмарки для источника и назначения
-        let sourcePlacemark = MKPlacemark(coordinate: currentLocation)
-        let destinationPlacemark = MKPlacemark(coordinate: destination)
+        let sourceMapItem = MKMapItem(placemark: MKPlacemark(coordinate: currentLocation))
+        sourceMapItem.name = "I'm here"
+        
+        let destinationMapItem = MKMapItem(placemark: MKPlacemark(coordinate: destination))
+        destinationMapItem.name = "Destination"
+        
 
         // Настраиваем запрос маршрута
         let request = MKDirections.Request()
-        request.source = MKMapItem(placemark: sourcePlacemark)
-        request.destination = MKMapItem(placemark: destinationPlacemark)
+        request.source = sourceMapItem
+        request.destination = destinationMapItem
         request.transportType = .automobile
         request.requestsAlternateRoutes = false
 
@@ -70,18 +96,23 @@ final class MapPlaceController: UIViewController {
                 return
             }
 
-            // Удаляем предыдущие оверлеи и добавляем новый маршрут
-            if let overlays = self?.mapView.overlays {
-                self?.mapView.removeOverlays(overlays)
+            DispatchQueue.main.async { [weak self] in
+                self?.mapView.removeOverlays(self?.mapView.overlays ?? [])
+                
+                self?.mapView.removeAnnotations(self?.mapView.annotations ?? [])
+                
+                self?.mapView.addOverlay(route.polyline)
+                
+                let sourceAnnotation = RouteAnnotation(coordinate: currentLocation, type: .source)
+                let destinationAnnotation = RouteAnnotation(coordinate: destination, type: .destination)
+                self?.mapView.addAnnotations([sourceAnnotation, destinationAnnotation])
+                
+                self?.mapView.setVisibleMapRect(
+                    route.polyline.boundingMapRect,
+                    edgePadding: UIEdgeInsets(top: 50, left: 20, bottom: 50, right: 20),
+                    animated: true
+                )
             }
-            self?.mapView.addOverlay(route.polyline)
-
-            // Устанавливаем видимую область карты с padding
-            self?.mapView.setVisibleMapRect(
-                route.polyline.boundingMapRect,
-                edgePadding: UIEdgeInsets(top: 50, left: 20, bottom: 50, right: 20),
-                animated: true
-            )
         }
     }
 
@@ -170,6 +201,46 @@ extension MapPlaceController: LocationManagerDelegate {
 }
 
 extension MapPlaceController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        // Не обрабатываем пользовательскую аннотацию (где находится пользователь)
+        guard !(annotation is MKUserLocation) else { return nil }
+
+        // Определяем тип аннотации
+        guard let routeAnnotation = annotation as? RouteAnnotation else { return nil }
+
+        let identifier = "RouteAnnotation"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true // всплывающее окно
+        } else {
+            annotationView?.annotation = annotation
+        }
+
+        // Устанавливаем кастомную иконку
+        let imageName: String
+        switch routeAnnotation.type {
+        case .source:
+            imageName = "icon-current-location"
+        case .destination:
+            imageName = "icon-destination"
+        }
+
+        if let image = UIImage(named: imageName) {
+            annotationView?.image = image
+            annotationView?.layer.shadowColor = UIColor.black.cgColor
+            annotationView?.layer.shadowOffset = CGSize(width: 0, height: 2)
+            annotationView?.layer.shadowOpacity = 0.3
+            annotationView?.layer.shadowRadius = 3
+        }
+
+        // Убираем стандартный значок
+        annotationView?.rightCalloutAccessoryView = nil
+
+        return annotationView
+    }
+    
     func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
         
         if let polyline = overlay as? MKPolyline {
