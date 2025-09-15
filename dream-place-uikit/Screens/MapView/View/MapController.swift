@@ -1,5 +1,5 @@
 //
-//  MapPlaceController.swift
+//  MapController.swift
 //  dream-place-uikit
 //
 //  Created by Олег Дмитриев on 14.09.2025.
@@ -31,7 +31,7 @@ class RouteAnnotation: MKPointAnnotation {
     }
 }
 
-final class MapPlaceController: UIViewController {
+final class MapController: UIViewController {
     
     private var currentLocation: CLLocationCoordinate2D?
     var pendingDestination: CLLocationCoordinate2D?
@@ -176,7 +176,7 @@ final class MapPlaceController: UIViewController {
     }
 }
 
-extension MapPlaceController: LocationManagerDelegate {
+extension MapController: LocationManagerDelegate {
     func didUpdateLocation(_ location: CLLocationCoordinate2D) {
         self.currentLocation = location
         
@@ -200,7 +200,7 @@ extension MapPlaceController: LocationManagerDelegate {
     }
 }
 
-extension MapPlaceController: MKMapViewDelegate {
+extension MapController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         // Не обрабатываем пользовательскую аннотацию (где находится пользователь)
         guard !(annotation is MKUserLocation) else { return nil }

@@ -297,7 +297,7 @@ final class PlaceDetailsView: UIViewController {
     }
 
     @objc private func mapButtonTapped() {
-        let mapVC = MapPlaceController()
+        let mapVC = MapController()
         mapVC.hidesBottomBarWhenPushed = true
         mapVC.pendingDestination = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         navigationController?.pushViewController(mapVC, animated: true)
