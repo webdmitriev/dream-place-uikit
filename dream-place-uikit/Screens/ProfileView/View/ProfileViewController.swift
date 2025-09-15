@@ -14,7 +14,7 @@ final class ProfileViewController: UIViewController {
         
         view.backgroundColor = .appBg
         
-        title = "Профиль"
+        title = "Profile"
     }
     
 }

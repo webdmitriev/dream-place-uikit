@@ -34,7 +34,7 @@ final class Builder {
     
     static func createBookingView() -> UIViewController {
         let view = BookingViewController()
-        view.tabBarItem = UITabBarItem(title: "Booking", image: UIImage(systemName: "magnifyingglass"), tag: 1)
+        view.tabBarItem = UITabBarItem(title: "Booking", image: UIImage(named: "tab-bar-check"), tag: 1)
         return view
     }
     
@@ -46,7 +46,7 @@ final class Builder {
     
     static func createProfileView() -> UIViewController {
         let view = ProfileViewController()
-        view.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), tag: 3)
+        view.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "tab-bar-person"), tag: 3)
         return view
     }
     

@@ -14,7 +14,7 @@ final class BookingViewController: UIViewController {
         
         view.backgroundColor = .appBg
         
-        title = "Бронирование"
+        title = "Booking"
     }
     
 }
