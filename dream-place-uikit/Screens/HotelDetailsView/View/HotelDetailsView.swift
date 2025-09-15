@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class HotelDetailsView: UIViewController {
 
@@ -15,6 +16,9 @@ final class HotelDetailsView: UIViewController {
     private var imageHeightConstraint: NSLayoutConstraint!
     private var imageTopConstraint: NSLayoutConstraint!
     private var isDescriptionExpanded = false
+    
+    private lazy var latitude: Double = 0
+    private lazy var longitude: Double = 0
 
     // UI элементы
     private lazy var scrollView: UIScrollView = uiBuilder.addScrollView(bgc: .appBg)
@@ -262,6 +266,11 @@ final class HotelDetailsView: UIViewController {
 
         bottomPrice.setPriceText(price: item.price ?? 0, subtitle: " /night", priceFZ: 17, color: .appBlack)
         
+        if let coord = item.coordinate {
+            latitude = coord.latitude
+            longitude = coord.longitude
+        }
+        
         if let imageString = item.image, let url = URL(string: imageString) {
             imageView.load(url: url)
         } else {
@@ -289,7 +298,6 @@ final class HotelDetailsView: UIViewController {
                 galleryStack.addArrangedSubview(thumb)
             }
         }
-
 
         // --- Facilities
         guard let facilities = item.facilities else { return }
@@ -394,9 +402,20 @@ final class HotelDetailsView: UIViewController {
             action: #selector(likeButtonTapped)
         )
         
-        // Устанавливаем кастомную кнопку
+        let mapButton = UIBarButtonItem(
+            image: UIImage(named: "btn-map")?.withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(mapButtonTapped)
+        )
+        
+        // Устанавливаем кнопки
         navigationItem.leftBarButtonItem = backButton
-        navigationItem.rightBarButtonItem = likeButton
+        if latitude != 0 && longitude != 0 {
+            navigationItem.rightBarButtonItems = [likeButton, mapButton]
+        } else {
+            navigationItem.rightBarButtonItems = [likeButton]
+        }
         
         // Скрываем стандартную кнопку назад
         navigationItem.hidesBackButton = true
@@ -447,6 +466,13 @@ final class HotelDetailsView: UIViewController {
     @objc
     private func likeButtonTapped() {
         print("likeButtonTapped")
+    }
+    
+    @objc private func mapButtonTapped() {
+        let mapVC = MapPlaceController()
+        mapVC.hidesBottomBarWhenPushed = true
+        mapVC.pendingDestination = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        navigationController?.pushViewController(mapVC, animated: true)
     }
     
     @objc

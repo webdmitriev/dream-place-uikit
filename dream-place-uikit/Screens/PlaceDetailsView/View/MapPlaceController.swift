@@ -218,7 +218,7 @@ extension MapPlaceController: MKMapViewDelegate {
             annotationView?.annotation = annotation
         }
 
-        // Устанавливаем кастомную иконку
+        // Устанавливаем кастомную иконку 9,59319° С, 123,78396° В
         let imageName: String
         switch routeAnnotation.type {
         case .source:
