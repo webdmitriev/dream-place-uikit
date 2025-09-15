@@ -85,24 +85,18 @@ final class MapPlaceController: UIViewController {
         }
     }
 
-    
-//    func geocodeAddressString(_ addressString: String) {
-//        let geocoder = CLGeocoder()
-//        geocoder.geocodeAddressString(addressString) { [weak self] placemarks, error in
-//            if let placeMark = placemarks?.first?.location?.coordinate {
-//                self?.builderRoute(to: placeMark)
-//            } else {
-//                guard let error else { return }
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
-    
-//    func buildRoute(to latitude: Double, longitude: Double) {
-//        print(latitude)
-//        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-//        builderRoute(to: coordinate)
-//    }
+    // address string
+    func geocodeAddressString(_ addressString: String) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(addressString) { [weak self] placemarks, error in
+            if let placeMark = placemarks?.first?.location?.coordinate {
+                self?.builderRoute(to: placeMark)
+            } else {
+                guard let error else { return }
+                print(error.localizedDescription)
+            }
+        }
+    }
     
     // MARK: - Navigation
     private func setupCustomBackButton() {
@@ -157,13 +151,13 @@ extension MapPlaceController: LocationManagerDelegate {
         
         let region = MKCoordinateRegion(center: location, latitudinalMeters: 5000, longitudinalMeters: 5000)
         mapView.setRegion(region, animated: true)
+        mapView.mapType = .hybridFlyover
         
         let annotation = MKPointAnnotation()
         annotation.coordinate = location
         annotation.title = "My Location"
         mapView.addAnnotation(annotation)
         
-        // Теперь текущая локация есть, можно строить маршрут
         if let destination = pendingDestination {
             builderRoute(to: destination)
             pendingDestination = nil

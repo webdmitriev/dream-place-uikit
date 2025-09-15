@@ -252,7 +252,11 @@ final class PlaceDetailsView: UIViewController {
         
         // Устанавливаем кнопки
         navigationItem.leftBarButtonItem = backButton
-        navigationItem.rightBarButtonItems = [likeButton, mapButton]
+        if latitude != 0 && longitude != 0 {
+            navigationItem.rightBarButtonItems = [likeButton, mapButton]
+        } else {
+            navigationItem.rightBarButtonItems = [likeButton]
+        }
         
         // Скрываем стандартную кнопку назад
         navigationItem.hidesBackButton = true
