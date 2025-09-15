@@ -34,9 +34,22 @@ final class Builder {
     }
     
     static func createBookingView() -> UIViewController {
-        let view = BookingViewController()
-        view.tabBarItem = UITabBarItem(title: "Booking", image: UIImage(named: "tab-bar-check"), tag: 1)
-        return view
+        let viewController = BookingViewController()
+        let presenter = BookingPresenter()
+        let interactor = BookingInteractor()
+        let router = BookingRouter()
+        
+        viewController.output = presenter
+        presenter.view = viewController
+        presenter.interactor = interactor
+        presenter.router = router
+        
+        interactor.presenter = presenter
+        viewController.router = router
+        router.controller = viewController
+        
+        viewController.tabBarItem = UITabBarItem(title: "Booking", image: UIImage(named: "tab-bar-check"), tag: 1)
+        return viewController
     }
     
     static func createFavoriteView() -> UIViewController {

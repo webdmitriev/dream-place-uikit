@@ -9,6 +9,11 @@ import UIKit
 
 final class BookingViewController: UIViewController {
     
+    var output: BookingViewOutput!
+    weak var router: BookingRouter?
+    
+    private var booking = [Booking]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -16,5 +21,17 @@ final class BookingViewController: UIViewController {
         
         title = "Booking"
     }
+    
+}
+
+extension BookingViewController: BookingViewInput {
+    func displayBooking(_ booking: [Booking]) {
+        self.booking = booking
+    }
+    
+    func displayError(_ error: any Error) {
+        print(error.localizedDescription)
+    }
+    
     
 }

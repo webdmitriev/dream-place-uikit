@@ -11,7 +11,7 @@ final class HomeViewController: UIViewController {
     
     private var hotels = [Hotel]()
     private let items: [CollectionStruct] = CollectionStruct.mockData()
-    var router: HomeRouter?
+    weak var router: HomeRouter?
     
     private let uiBuilder = UIBuilder()
     
