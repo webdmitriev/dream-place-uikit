@@ -11,6 +11,7 @@ final class HomeViewController: UIViewController {
     
     private var hotels = [Hotel]()
     private let items: [CollectionStruct] = CollectionStruct.mockData()
+    var router: HomeRouter?
     
     private let uiBuilder = UIBuilder()
     
@@ -52,6 +53,7 @@ final class HomeViewController: UIViewController {
         view.addSubviews(headerImage, collectionView)
         
         collectionView.delegate = self
+        router?.controller = self
         
         createDataSource()
         createSnapshot()
@@ -132,12 +134,33 @@ final class HomeViewController: UIViewController {
         self.dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
             guard kind == UICollectionView.elementKindSectionHeader else { return UICollectionReusableView() }
             
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
-                                                                         withReuseIdentifier: CollectionDiffableHeader.reuseID,
-                                                                         for: indexPath) as! CollectionDiffableHeader
+            let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: CollectionDiffableHeader.reuseID,
+                for: indexPath
+            ) as! CollectionDiffableHeader
             
-            let section = self?.items[indexPath.section]
-            header.actionCell(title: section?.title ?? "")
+            guard let self = self else { return header }
+            
+            let section = self.items[indexPath.section]
+            let sectionType = section.type
+            
+            header.actionCell(title: section.title)
+            
+            switch sectionType {
+            case .hotels:
+                header.onTap = { [weak self] in
+                    self?.router?.openBookingTab()
+                }
+            case .places:
+                header.onTap = {
+                    print("places")
+                    // self?.router?.openPlaces()
+                }
+            default:
+                header.onTap = nil
+            }
+            
             return header
         }
     }

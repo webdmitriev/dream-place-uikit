@@ -25,6 +25,7 @@ final class Builder {
         presenter.router = router
         
         interactor.presenter = presenter
+        viewController.router = router
         router.controller = viewController
         
         viewController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)

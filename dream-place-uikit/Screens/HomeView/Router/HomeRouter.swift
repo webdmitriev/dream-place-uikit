@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeRouter: HomeRouterInput {
+final class HomeRouter: HomeRouterInput {
     weak var controller: UIViewController?
     
     func navigateToHotelDetails(for hotel: Hotel) {
@@ -16,6 +16,10 @@ class HomeRouter: HomeRouterInput {
         controller?.present(alert, animated: true)
         
         //controller?.navigationController?.pushViewController(UIViewController(), animated: true)
+    }
+    
+    func openBookingTab() {
+        controller?.tabBarController?.selectedIndex = 1
     }
     
 }
