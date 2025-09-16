@@ -10,6 +10,7 @@ import UIKit
 final class BookingViewController: UIViewController {
     
     // MARK: - Properties
+    private let uiBuilder = UIBuilder()
     var output: BookingViewOutput!
     weak var router: BookingRouter?
     
@@ -31,17 +32,7 @@ final class BookingViewController: UIViewController {
     
     private var searchController: UISearchController!
     
-    private lazy var emptyStateLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Ничего не найдено"
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .systemGray
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.isHidden = true // По умолчанию скрыт
-        return label
-    }()
+    private lazy var emptyStateLabel: UILabel = uiBuilder.addLabel("Ничего не найдено", color: .appBlack, align: .center)
     
     
     // MARK: - Lifecycle
@@ -64,6 +55,8 @@ final class BookingViewController: UIViewController {
         
         title = "Booking"
         
+        emptyStateLabel.isHidden = true
+        
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = "Find your place"
         searchController.searchBar.tintColor = .systemBlue
@@ -71,7 +64,6 @@ final class BookingViewController: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
         
-        // Устанавливаем search controller как header
         tableView.tableHeaderView = searchController.searchBar
         
         setupConstraints()
