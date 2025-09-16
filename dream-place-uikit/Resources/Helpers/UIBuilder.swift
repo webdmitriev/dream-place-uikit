@@ -14,6 +14,7 @@ final class UIBuilder {
         case placeTitle = 28
         case header = 22
         case title = 20
+        case cellTitle = 18
         case text = 16
         case btn = 15
         case label = 12

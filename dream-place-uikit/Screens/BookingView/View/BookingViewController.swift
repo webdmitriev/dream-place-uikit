@@ -17,10 +17,10 @@ final class BookingViewController: UIViewController {
     
     // UI элементы
     private lazy var tableView: UITableView = {
-        $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        $0.register(BookingCell.self, forCellReuseIdentifier: BookingCell.reuseID)
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
-    }(UITableView())
+    }(UITableView(frame: view.frame, style: .grouped))
     
     
     // MARK: - Lifecycle
@@ -30,6 +30,8 @@ final class BookingViewController: UIViewController {
         view.backgroundColor = .appBg
         
         title = "Booking"
+        
+        output.viewDidLoad()
         
         setupUI()
         setupConstraints()
@@ -41,17 +43,13 @@ final class BookingViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
     }
     
     
     // MARK: - Constraints
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        //
     }
     
     
@@ -65,27 +63,39 @@ final class BookingViewController: UIViewController {
 extension BookingViewController: BookingViewInput {
     func displayBooking(_ booking: [Booking]) {
         self.booking = booking
+        tableView.reloadData()
     }
     
     func displayError(_ error: any Error) {
         print(error.localizedDescription)
     }
-    
-    
 }
 
 extension BookingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        8
+        self.booking.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: BookingCell.reuseID, for: indexPath) as! BookingCell
         
-        cell.backgroundColor = .appRed
+        let item = self.booking[indexPath.row]
+        
+        cell.configuration(item: item)
         
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        112
+    }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("tap")
+//        let item = self.booking[indexPath.row]
+//        
+//        let detailsVC = HotelDetailsView(item: item)
+//        detailsVC.hidesBottomBarWhenPushed = true
+//        navigationController?.pushViewController(detailsVC, animated: true)
+    }
 }
