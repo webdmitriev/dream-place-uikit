@@ -85,10 +85,8 @@ final class BookingViewController: UIViewController {
             emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             emptyStateLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 32),
-            emptyStateLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -32)
-        ])
-        
-        NSLayoutConstraint.activate([
+            emptyStateLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -32),
+
             searchField.heightAnchor.constraint(equalToConstant: 44),
             searchField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: uiBuilder.offset),
@@ -100,7 +98,6 @@ final class BookingViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    
     
     // MARK: - Navigation
     

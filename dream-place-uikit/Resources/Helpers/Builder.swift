@@ -36,7 +36,9 @@ final class Builder {
     static func createBookingView() -> UIViewController {
         let viewController = BookingViewController()
         let presenter = BookingPresenter()
-        let interactor = BookingInteractor()
+        
+        let repository: BookingRepositoryProtocol = BookingRepository()
+        let interactor = BookingInteractor(repository: repository)
         let router = BookingRouter()
         
         viewController.output = presenter
