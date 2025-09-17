@@ -24,7 +24,7 @@ final class BookingViewController: UIViewController {
     private lazy var searchField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Поиск"
+        textField.placeholder = "Find booking"
         textField.textColor = .label
         textField.font = .systemFont(ofSize: 17, weight: .medium)
         textField.backgroundColor = .secondarySystemBackground
@@ -33,7 +33,7 @@ final class BookingViewController: UIViewController {
         return textField
     }()
     private lazy var tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .grouped)
+        let table = UITableView(frame: .zero, style: .plain)
         table.register(BookingCell.self, forCellReuseIdentifier: BookingCell.reuseID)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.separatorStyle = .none
@@ -42,7 +42,7 @@ final class BookingViewController: UIViewController {
         return table
     }()
     
-    private lazy var emptyStateLabel: UILabel = uiBuilder.addLabel("Ничего не найдено", color: .appBlack, align: .center)
+    private lazy var emptyStateLabel: UILabel = uiBuilder.addLabel("Not found", color: .appBlack, align: .center)
     
     
     // MARK: - Lifecycle
