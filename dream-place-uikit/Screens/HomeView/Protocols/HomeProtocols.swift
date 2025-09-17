@@ -9,30 +9,31 @@ import Foundation
 
 // View
 protocol HomeViewInput: AnyObject {
-    func displayHotels(_ hotels: [Hotel])
-    func displayError(_ error: Error)
+    func didLoadSections(_ sections: [CollectionStruct])
+    func didFailWithError(_ error: any Error)
 }
 
 
 // Presenter
 protocol HomeViewOutput: AnyObject {
     func viewDidLoad()
-    func didSelectHotel(at hotel: Hotel)
+    func didSelectBooking(at hotel: Booking)
     func changeOnboardingStatus(_ status: Bool)
 }
 
 
 // Interactor
 protocol HomeInteractorInput: AnyObject {
-    func fetchHotels()
+    func fetchData()
 }
 
 protocol HomeInteractorOutput: AnyObject {
-    func fetchHotels(_ hotels: [Hotel])
+    func didLoadSections(_ sections: [CollectionStruct])
+    func didFailWithError(_ error: Error)
 }
 
 
 // Router
 protocol HomeRouterInput: AnyObject {
-    func navigateToHotelDetails(for hotel: Hotel)
+    func navigateToBookingDetails(for booking: Booking)
 }

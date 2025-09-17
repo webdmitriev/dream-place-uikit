@@ -16,7 +16,9 @@ final class Builder {
     static func createHomeView() -> UIViewController {
         let viewController = HomeViewController()
         let presenter = HomePresenter()
-        let interactor = MockHomeInteractor() // mock
+
+        let repository: BookingRepositoryProtocol = BookingRepository()
+        let interactor = HomeInteractor(repository: repository)
         let router = HomeRouter()
         
         viewController.output = presenter
@@ -29,7 +31,6 @@ final class Builder {
         router.controller = viewController
         
         viewController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
-        
         return viewController
     }
     

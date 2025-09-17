@@ -11,7 +11,7 @@ import CoreLocation
 final class PlaceDetailsView: UIViewController {
 
     // MARK: - Properties
-    private let item: Items
+    private let item: Booking
     private let uiBuilder = UIBuilder()
     private let height: CGFloat = UIScreen.main.bounds.height
 
@@ -58,7 +58,7 @@ final class PlaceDetailsView: UIViewController {
     }(UILabel())
 
     // MARK: - Init
-    init(item: Items) {
+    init(item: Booking) {
         self.item = item
         super.init(nibName: nil, bundle: nil)
     }

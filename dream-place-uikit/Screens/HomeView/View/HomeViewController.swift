@@ -9,12 +9,13 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
-    private var hotels = [Hotel]()
-    private let items: [CollectionStruct] = CollectionStruct.mockData()
-    weak var router: HomeRouter?
-    
+    // MARK: - Properties
     private let uiBuilder = UIBuilder()
-    
+    var output: HomeViewOutput!
+    weak var router: HomeRouter?
+
+    private var booking = [Booking]()
+    private var items: [CollectionStruct] = []
     private let headerImageHeight: CGFloat = 332
     
     private lazy var headerImage: UIImageView = {
@@ -24,9 +25,7 @@ final class HomeViewController: UIViewController {
         return $0
     }(UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: headerImageHeight)))
     
-    var output: HomeViewOutput!
-    
-    private var dataSource: UICollectionViewDiffableDataSource<CollectionStruct, Items>!
+    private var dataSource: UICollectionViewDiffableDataSource<CollectionStruct, Booking>!
     
     private lazy var collectionView: UICollectionView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -51,12 +50,8 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubviews(headerImage, collectionView)
-        
         collectionView.delegate = self
         router?.controller = self
-        
-        createDataSource()
-        createSnapshot()
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -66,7 +61,9 @@ final class HomeViewController: UIViewController {
         ])
         
         // output.changeOnboardingStatus(false)
-        // output.viewDidLoad()
+        createDataSource()
+        //createSnapshot()
+        output.viewDidLoad()
     }
     
     // MARK: 1 - UICollectionViewCompositionalLayout
@@ -109,7 +106,7 @@ final class HomeViewController: UIViewController {
 
     // MARK: 2 - dataSource
     private func createDataSource() {
-        self.dataSource = UICollectionViewDiffableDataSource<CollectionStruct, Items>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
+        self.dataSource = UICollectionViewDiffableDataSource<CollectionStruct, Booking>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             
             let currentSection = self!.items[indexPath.section].type
             
@@ -166,8 +163,8 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: 3 - create snapshot
-    private func createSnapshot() {
-        var snapshot = NSDiffableDataSourceSnapshot<CollectionStruct, Items>()
+    private func applySnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<CollectionStruct, Booking>()
         snapshot.appendSections(items)
         
         items.forEach { section in
@@ -180,11 +177,12 @@ final class HomeViewController: UIViewController {
 
 // MARK: Home
 extension HomeViewController: HomeViewInput {
-    func displayHotels(_ hotels: [Hotel]) {
-        self.hotels = hotels
+    func didLoadSections(_ sections: [CollectionStruct]) {
+        self.items = sections
+        applySnapshot()
     }
     
-    func displayError(_ error: any Error) {
+    func didFailWithError(_ error: any Error) {
         print(error.localizedDescription)
     }
 }
@@ -206,7 +204,7 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch sectionType {
         case .hotels:
-            let detailsVC = HotelDetailsView(item: item)
+            let detailsVC = BookingDetailsView(item: item)
             detailsVC.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(detailsVC, animated: true)
         case .places:

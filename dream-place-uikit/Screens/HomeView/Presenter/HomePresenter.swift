@@ -7,25 +7,30 @@
 
 import Foundation
 
-class HomePresenter: HomeViewOutput, HomeInteractorOutput {
-    
+final class HomePresenter: HomeViewOutput, HomeInteractorOutput {
+
     weak var view: HomeViewInput?
     var interactor: HomeInteractorInput!
     var router: HomeRouterInput!
     
     func viewDidLoad() {
-        interactor?.fetchHotels()
+        interactor?.fetchData()
     }
     
-    func didSelectHotel(at hotel: Hotel) {
-        router.navigateToHotelDetails(for: hotel)
-    }
-    
-    func fetchHotels(_ hotels: [Hotel]) {
-        view?.displayHotels(hotels)
+    func didSelectBooking(at booking: Booking) {
+        router.navigateToBookingDetails(for: booking)
     }
     
     func changeOnboardingStatus(_ status: Bool) {
         UserDefaults.standard.set(status, forKey: "onboardingCompleted")
+    }
+    
+    // MARK: - HomeInteractorOutput
+    func didLoadSections(_ sections: [CollectionStruct]) {
+        view?.didLoadSections(sections)
+    }
+    
+    func didFailWithError(_ error: any Error) {
+        view?.didFailWithError(error)
     }
 }

@@ -163,10 +163,10 @@ extension BookingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let _ = booking[indexPath.row]
-//        let detailsVC = HotelDetailsView(item: item)
-//        detailsVC.hidesBottomBarWhenPushed = true
-//        navigationController?.pushViewController(detailsVC, animated: true)
+        let item = booking[indexPath.row]
+        let detailsVC = BookingDetailsView(item: item)
+        detailsVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
 }
 

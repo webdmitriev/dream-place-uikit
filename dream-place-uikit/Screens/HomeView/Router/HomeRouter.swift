@@ -8,10 +8,11 @@
 import UIKit
 
 final class HomeRouter: HomeRouterInput {
+
     weak var controller: UIViewController?
     
-    func navigateToHotelDetails(for hotel: Hotel) {
-        let alert = UIAlertController(title: hotel.title, message: hotel.address, preferredStyle: .alert)
+    func navigateToBookingDetails(for booking: Booking) {
+        let alert = UIAlertController(title: booking.name, message: booking.address, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         controller?.present(alert, animated: true)
         

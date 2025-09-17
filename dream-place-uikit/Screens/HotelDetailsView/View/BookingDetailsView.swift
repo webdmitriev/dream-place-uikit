@@ -1,5 +1,5 @@
 //
-//  HotelDetailsView.swift
+//  BookingDetailsView.swift
 //  dream-place-uikit
 //
 //  Created by Олег Дмитриев on 08.09.2025.
@@ -8,10 +8,10 @@
 import UIKit
 import CoreLocation
 
-final class HotelDetailsView: UIViewController {
+final class BookingDetailsView: UIViewController {
 
     // MARK: - Properties
-    private let item: Items
+    private let item: Booking
     private let uiBuilder = UIBuilder()
     private var imageHeightConstraint: NSLayoutConstraint!
     private var imageTopConstraint: NSLayoutConstraint!
@@ -104,7 +104,7 @@ final class HotelDetailsView: UIViewController {
     
 
     // MARK: - Init
-    init(item: Items) {
+    init(item: Booking) {
         self.item = item
         super.init(nibName: nil, bundle: nil)
     }
@@ -506,7 +506,7 @@ final class HotelDetailsView: UIViewController {
 
 }
 
-extension HotelDetailsView: UIScrollViewDelegate {
+extension BookingDetailsView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
 

@@ -66,7 +66,7 @@ final class PlacesCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(item: Items) {
+    func configure(item: Booking) {
         self.cellTitle.text = item.name
         
         if let imageString = item.image, let url = URL(string: imageString) {

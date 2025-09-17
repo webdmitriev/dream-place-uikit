@@ -6,45 +6,50 @@
 //
 
 import Foundation
-
-class MockHomeInteractor: HomeInteractorInput {
-    
-    weak var presenter: HomeInteractorOutput?
-    
-    func fetchHotels() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            let hotels: [Hotel] = [
-                Hotel(title: "Anda Blue House", address: "Barangay Trinidad 6310, Philippines",
-                      price: 43.0, rating: 9.5),
-                Hotel(title: "Calape Vacation Village and Resort", address: "Pangangan Island, Calape, 6328 Bohol",
-                      price: 31.0, rating: 9.4),
-                Hotel(title: "Bohol of the slope Hotel", address: "Barangay Danao, Panglao Island, Bohol, 6340",
-                      price: 29.0, rating: 9.8),
-                Hotel(title: "Abraham Bohol", address: "Purok 5, Panglao Island Circumferencial Rd Brgy. Danao",
-                      price: 11.0, rating: 8.6),
-                Hotel(title: "Panglao Severus Beach Hotel", address: "Barangay Danao, Panglao Island, Bohol, 6340",
-                      price: 17.0, rating: 7.4),
-                Hotel(title: "Panglao Green Hotel", address: "Barangay Danao, Panglao Island, Bohol, 6340",
-                      price: 34.0, rating: 7.5),
-            ]
-            
-            self.presenter?.fetchHotels(hotels)
-//            if Bool.random() {
-//                self.presenter?.fetchHotels(hotels)
-//            } else {
-//                // self.presenter?.fetchError(/* ошибка */)
-//            }
-        }
-    }
-    
-}
+import Combine
 
 class HomeInteractor: HomeInteractorInput {
-    
+
+    private let repository: BookingRepositoryProtocol
     weak var presenter: HomeInteractorOutput?
     
-    func fetchHotels() {
-        print("oi")
+    private var cancellables: Set<AnyCancellable> = []
+    
+    init (repository: BookingRepositoryProtocol, presenter: HomeInteractorOutput? = nil) {
+        self.repository = repository
+        self.presenter = presenter
+    }
+    
+    func fetchData() {
+        // 1. Сначала собираем статичные секции
+        var sections: [CollectionStruct] = [
+            CollectionStruct(title: "Hotel Near You", action: false, type: .header, items: [Booking(name: "Header")]),
+            CollectionStruct(title: "Search", action: false, type: .search, items: [Booking(name: "Search")]),
+            CollectionStruct(title: "Hotel Near You", action: true, type: .hotels, items: []),
+            CollectionStruct(title: "Explore Place", action: true, type: .places, items: [])
+        ]
+        
+        // 2. Загружаем отели
+        repository.fetchBookings()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.presenter?.didFailWithError(error)
+                }
+            } receiveValue: { [weak self] bookings in
+                guard let self = self else { return }
+                if let index = sections.firstIndex(where: { $0.type == .hotels }) {
+                    sections[index] = CollectionStruct(
+                        title: "Hotel Near You",
+                        action: true,
+                        type: .hotels,
+                        items: bookings
+                    )
+                }
+                
+                self.presenter?.didLoadSections(sections)
+            }
+            .store(in: &cancellables)
     }
     
 }
