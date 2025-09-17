@@ -44,6 +44,39 @@ final class MapController: UIViewController {
         return $0
     }(MKMapView())
     
+    private lazy var zoomInButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "plus.magnifyingglass"), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        button.layer.cornerRadius = 25
+        button.addTarget(self, action: #selector(zoomInTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private lazy var zoomOutButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "minus.magnifyingglass"), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        button.layer.cornerRadius = 25
+        button.addTarget(self, action: #selector(zoomOutTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private lazy var locationButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "location.fill"), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = UIColor.systemBlue
+        button.layer.cornerRadius = 25
+        button.addTarget(self, action: #selector(centerOnUserLocation), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,6 +84,7 @@ final class MapController: UIViewController {
         LocationManager.shared.delegate = self
 
         setupUI()
+        setupControls()
         
         setupCustomBackButton()
         setupTransparentNavigationBar()
@@ -59,6 +93,33 @@ final class MapController: UIViewController {
     // MARK: - Setup UI
     private func setupUI() {
         view.addSubview(mapView)
+    }
+    
+    private func setupControls() {
+        // Стек для zoom
+        let zoomStack = UIStackView(arrangedSubviews: [zoomInButton, zoomOutButton])
+        zoomStack.axis = .vertical
+        zoomStack.spacing = 12
+        zoomStack.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(zoomStack)
+        
+        NSLayoutConstraint.activate([
+            zoomStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            zoomStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            zoomInButton.widthAnchor.constraint(equalToConstant: 50),
+            zoomInButton.heightAnchor.constraint(equalToConstant: 50),
+            zoomOutButton.widthAnchor.constraint(equalToConstant: 50),
+            zoomOutButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        // Кнопка местоположения
+        view.addSubview(locationButton)
+        NSLayoutConstraint.activate([
+            locationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            locationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            locationButton.widthAnchor.constraint(equalToConstant: 50),
+            locationButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
     
     // MARK: Calculate location - to
@@ -75,7 +136,6 @@ final class MapController: UIViewController {
         let destinationMapItem = MKMapItem(placemark: MKPlacemark(coordinate: destination))
         destinationMapItem.name = "Destination"
         
-
         // Настраиваем запрос маршрута
         let request = MKDirections.Request()
         request.source = sourceMapItem
@@ -171,8 +231,40 @@ final class MapController: UIViewController {
     }
     
     // MARK: - Actions
-    @objc private func backButtonTapped() {
+    @objc
+    private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc
+    private func zoomInTapped() {
+        let region = mapView.region
+        let newRegion = MKCoordinateRegion(
+            center: region.center,
+            span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta * 0.5,
+                                   longitudeDelta: region.span.longitudeDelta * 0.5)
+        )
+        mapView.setRegion(newRegion, animated: true)
+    }
+    
+    @objc
+    private func zoomOutTapped() {
+        let region = mapView.region
+        let newRegion = MKCoordinateRegion(
+            center: region.center,
+            span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta * 2.0,
+                                   longitudeDelta: region.span.longitudeDelta * 2.0)
+        )
+        mapView.setRegion(newRegion, animated: true)
+    }
+    
+    @objc
+    private func centerOnUserLocation() {
+        guard let location = currentLocation else { return }
+        let region = MKCoordinateRegion(center: location,
+                                        latitudinalMeters: 2000,
+                                        longitudinalMeters: 2000)
+        mapView.setRegion(region, animated: true)
     }
 }
 
@@ -218,7 +310,7 @@ extension MapController: MKMapViewDelegate {
             annotationView?.annotation = annotation
         }
 
-        // Устанавливаем кастомную иконку 9,59319° С, 123,78396° В
+        // Устанавливаем кастомную иконку
         let imageName: String
         switch routeAnnotation.type {
         case .source:
