@@ -10,6 +10,7 @@ import Combine
 
 protocol BookingRepositoryProtocol {
     func fetchBookings() -> AnyPublisher<[Booking], Error>
+    func fetchPlaces() -> AnyPublisher<[Places], Error>
 }
 
 final class BookingRepository: BookingRepositoryProtocol {
@@ -26,6 +27,16 @@ final class BookingRepository: BookingRepositoryProtocol {
         return urlSession.dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: [BookingDTO].self, decoder: JSONDecoder())
+            .map { $0.map { $0.toDomain() } }
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchPlaces() -> AnyPublisher<[Places], any Error> {
+        let url = baseURL.appendingPathComponent("dream-place")
+        
+        return urlSession.dataTaskPublisher(for: url)
+            .map(\.data)
+            .decode(type: [PlacesDTO].self, decoder: JSONDecoder())
             .map { $0.map { $0.toDomain() } }
             .eraseToAnyPublisher()
     }

@@ -25,7 +25,7 @@ final class HomeViewController: UIViewController {
         return $0
     }(UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: headerImageHeight)))
     
-    private var dataSource: UICollectionViewDiffableDataSource<CollectionStruct, Booking>!
+    private var dataSource: UICollectionViewDiffableDataSource<CollectionStruct, SectionItem>!
     
     private lazy var collectionView: UICollectionView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +106,7 @@ final class HomeViewController: UIViewController {
 
     // MARK: 2 - dataSource
     private func createDataSource() {
-        self.dataSource = UICollectionViewDiffableDataSource<CollectionStruct, Booking>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
+        self.dataSource = UICollectionViewDiffableDataSource<CollectionStruct, SectionItem>(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
             
             let currentSection = self!.items[indexPath.section].type
             
@@ -164,7 +164,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: 3 - create snapshot
     private func applySnapshot() {
-        var snapshot = NSDiffableDataSourceSnapshot<CollectionStruct, Booking>()
+        var snapshot = NSDiffableDataSourceSnapshot<CollectionStruct, SectionItem>()
         snapshot.appendSections(items)
         
         items.forEach { section in
@@ -204,13 +204,17 @@ extension HomeViewController: UICollectionViewDelegate {
         
         switch sectionType {
         case .hotels:
-            let detailsVC = BookingDetailsView(item: item)
-            detailsVC.hidesBottomBarWhenPushed = true
-            navigationController?.pushViewController(detailsVC, animated: true)
+            if case let .booking(booking) = item {
+                let detailsVC = BookingDetailsView(item: booking)
+                detailsVC.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(detailsVC, animated: true)
+            }
         case .places:
-            let detailsVC = PlaceDetailsView(item: item)
-            detailsVC.hidesBottomBarWhenPushed = true
-            navigationController?.pushViewController(detailsVC, animated: true)
+            if case let .places(places) = item {
+                let detailsVC = PlaceDetailsView(item: places)
+                detailsVC.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(detailsVC, animated: true)
+            }
         default:
             break
         }

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreLocation
 
 enum SectionType {
     case header
@@ -15,9 +14,14 @@ enum SectionType {
     case places
 }
 
+enum SectionItem: Hashable {
+    case booking(Booking)
+    case places(Places)
+}
+
 struct CollectionStruct: Hashable {
     let title: String
     let action: Bool
     let type: SectionType
-    let items: [Booking]
+    let items: [SectionItem]
 }

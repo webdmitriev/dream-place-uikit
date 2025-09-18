@@ -66,13 +66,15 @@ final class PlacesCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(item: Booking) {
-        self.cellTitle.text = item.name
-        
-        if let imageString = item.image, let url = URL(string: imageString) {
-            self.cellImage.load(url: url)
-        } else {
-            self.cellImage.image = UIImage(named: "post-01")
+    func configure(item: SectionItem) {
+        if case let .places(places) = item {
+            self.cellTitle.text = places.name
+            
+            if let imageString = places.image, let url = URL(string: imageString) {
+                self.cellImage.load(url: url)
+            } else {
+                self.cellImage.image = UIImage(named: "post-01")
+            }
         }
     }
 }

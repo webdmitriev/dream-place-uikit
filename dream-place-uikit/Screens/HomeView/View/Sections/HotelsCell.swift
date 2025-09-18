@@ -86,18 +86,20 @@ final class HotelsCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(item: Booking) {
-        self.cellTitle.text = item.name
-        
-        if let imageString = item.image, let url = URL(string: imageString) {
-            self.cellImage.load(url: url)
-        } else {
-            self.cellImage.image = UIImage(named: "post-01")
+    func configure(item: SectionItem) {
+        if case let .booking(booking) = item {
+            self.cellTitle.text = booking.name
+            
+            if let imageString = booking.image, let url = URL(string: imageString) {
+                self.cellImage.load(url: url)
+            } else {
+                self.cellImage.image = UIImage(named: "post-01")
+            }
+            
+            self.cellPrice.setPriceText(price: booking.price ?? 0, subtitle: "/night")
+            self.cellAddress.text = booking.addressShort ?? ""
+            self.cellRating.text = "⭐️ \(booking.rating ?? 0)"
         }
-        
-        self.cellPrice.setPriceText(price: item.price ?? 0, subtitle: "/night")
-        self.cellAddress.text = item.addressShort ?? ""
-        self.cellRating.text = "⭐️ \(item.rating ?? 0)"
     }
     
     
