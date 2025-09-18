@@ -236,12 +236,12 @@ final class PlaceDetailsView: UIViewController {
             action: #selector(backButtonTapped)
         )
         
-        let likeButton = UIBarButtonItem(
-            image: UIImage(named: "btn-like")?.withRenderingMode(.alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(likeButtonTapped)
-        )
+//        let likeButton = UIBarButtonItem(
+//            image: UIImage(named: "btn-like")?.withRenderingMode(.alwaysOriginal),
+//            style: .plain,
+//            target: self,
+//            action: #selector(likeButtonTapped)
+//        )
         
         let mapButton = UIBarButtonItem(
             image: UIImage(named: "btn-map")?.withRenderingMode(.alwaysOriginal),
@@ -253,9 +253,7 @@ final class PlaceDetailsView: UIViewController {
         // Устанавливаем кнопки
         navigationItem.leftBarButtonItem = backButton
         if latitude != 0 && longitude != 0 {
-            navigationItem.rightBarButtonItems = [likeButton, mapButton]
-        } else {
-            navigationItem.rightBarButtonItems = [likeButton]
+            navigationItem.rightBarButtonItems = [mapButton]
         }
         
         // Скрываем стандартную кнопку назад
@@ -290,10 +288,6 @@ final class PlaceDetailsView: UIViewController {
     // MARK: - Actions
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
-    }
-
-    @objc private func likeButtonTapped() {
-        print("❤️ Лайк!")
     }
 
     @objc private func mapButtonTapped() {
