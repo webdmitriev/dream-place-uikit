@@ -21,6 +21,8 @@ final class BookingDetailsView: UIViewController {
     private lazy var longitude: Double = 0
 
     // UI элементы
+    private var likeButton: UIBarButtonItem!
+
     private lazy var scrollView: UIScrollView = uiBuilder.addScrollView(bgc: .appBg)
     private lazy var contentView: UIView = uiBuilder.addView(clipsToBounds: false)
     private lazy var imageView: UIImageView = uiBuilder.addImage("post-01", mode: .scaleAspectFill)
@@ -398,8 +400,8 @@ final class BookingDetailsView: UIViewController {
             action: #selector(backButtonTapped)
         )
         
-        let likeButton = UIBarButtonItem(
-            image: UIImage(named: "btn-like")?.withRenderingMode(.alwaysOriginal),
+        likeButton = UIBarButtonItem(
+            image: likeButtonImage(),
             style: .plain,
             target: self,
             action: #selector(likeButtonTapped)
@@ -420,7 +422,6 @@ final class BookingDetailsView: UIViewController {
             navigationItem.rightBarButtonItems = [likeButton]
         }
         
-        // Скрываем стандартную кнопку назад
         navigationItem.hidesBackButton = true
     }
         
@@ -449,6 +450,12 @@ final class BookingDetailsView: UIViewController {
         navigationController?.navigationBar.isTranslucent = true
     }
     
+    private func likeButtonImage() -> UIImage? {
+        let isFav = CoreDataManager.shared.isFavorite(id: item.id)
+        let imageName = isFav ? "btn-like-active" : "btn-like"
+        return UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal)
+    }
+    
     @objc
     private func galleryImageTapped(_ sender: UITapGestureRecognizer) {
         guard let view = sender.view else { return }
@@ -475,6 +482,8 @@ final class BookingDetailsView: UIViewController {
             CoreDataManager.shared.addFavorite(booking: item)
             print("❤️ Добавлено в избранное")
         }
+        
+        likeButton.image = likeButtonImage()
     }
     
     @objc private func mapButtonTapped() {
