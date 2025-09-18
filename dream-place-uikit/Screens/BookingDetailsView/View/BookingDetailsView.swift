@@ -468,7 +468,13 @@ final class BookingDetailsView: UIViewController {
     
     @objc
     private func likeButtonTapped() {
-        print("likeButtonTapped")
+        if CoreDataManager.shared.isFavorite(id: item.id) {
+            CoreDataManager.shared.removeFavorite(id: item.id)
+            print("❌ Удалено из избранного")
+        } else {
+            CoreDataManager.shared.addFavorite(booking: item)
+            print("❤️ Добавлено в избранное")
+        }
     }
     
     @objc private func mapButtonTapped() {

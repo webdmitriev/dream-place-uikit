@@ -14,6 +14,7 @@
 		53F1C4C32E5EE94A007D63C0 /* Exceptions for "dream-place-uikit" folder in "dream-place-uikit" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				BookingModel.xcdatamodeld,
 				Info.plist,
 			);
 			target = 53F1C4B02E5EE948007D63C0 /* dream-place-uikit */;

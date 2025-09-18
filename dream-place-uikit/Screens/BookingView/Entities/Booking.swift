@@ -9,7 +9,7 @@ import Foundation
 import CoreLocation
 
 struct Booking: Hashable, Identifiable {
-    let id = UUID()
+    let id: Int
     let name: String
     
     var image: String?

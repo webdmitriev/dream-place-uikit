@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 
 struct BookingDTO: Decodable {
+    let id: Int
     let name: String
     let image: String?
     let address: String?
@@ -23,6 +24,7 @@ struct BookingDTO: Decodable {
     
     func toDomain() -> Booking {
         Booking(
+            id: id,
             name: name,
             image: image,
             address: address,
