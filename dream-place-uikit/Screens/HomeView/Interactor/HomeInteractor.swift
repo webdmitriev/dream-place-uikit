@@ -12,7 +12,6 @@ class HomeInteractor: HomeInteractorInput {
 
     private let repository: BookingRepositoryProtocol
     weak var presenter: HomeInteractorOutput?
-    
     private var cancellables: Set<AnyCancellable> = []
     
     init (repository: BookingRepositoryProtocol, presenter: HomeInteractorOutput? = nil) {
@@ -52,7 +51,6 @@ class HomeInteractor: HomeInteractorInput {
             }
             .store(in: &cancellables)
         
-
         // 3. Загружаем места
         repository.fetchPlaces()
             .receive(on: DispatchQueue.main)
@@ -76,5 +74,4 @@ class HomeInteractor: HomeInteractorInput {
             }
             .store(in: &cancellables)
     }
-    
 }

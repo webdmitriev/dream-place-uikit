@@ -13,11 +13,8 @@ final class CollectionDiffableHeader: UICollectionReusableView {
     private let uiBuilder = UIBuilder()
     
     private lazy var stackView: UIStackView = uiBuilder.addStack()
-    
     private lazy var titleLabel: UILabel = uiBuilder.addLabel("Hotel Near You", fz: .header, fw: .medium, color: .appBlack, lines: 1)
-    
     private lazy var headerBtn: UIButton = uiBuilder.addButton("View all", color: .appBlue, bgc: .clear)
-
     var onTap: (() -> Void)? {
         didSet {
             headerBtn.isHidden = (onTap == nil)
@@ -28,7 +25,6 @@ final class CollectionDiffableHeader: UICollectionReusableView {
         super.init(frame: frame)
         
         addSubview(stackView)
-        
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(headerBtn)
         

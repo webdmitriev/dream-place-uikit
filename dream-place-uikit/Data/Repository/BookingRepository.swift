@@ -32,7 +32,7 @@ final class BookingRepository: BookingRepositoryProtocol {
     }
     
     func fetchPlaces() -> AnyPublisher<[Places], any Error> {
-        let url = baseURL.appendingPathComponent("dream-place")
+        let url = baseURL.appendingPathComponent("places")
         
         return urlSession.dataTaskPublisher(for: url)
             .map(\.data)

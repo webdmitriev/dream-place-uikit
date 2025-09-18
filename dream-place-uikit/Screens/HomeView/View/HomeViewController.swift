@@ -40,7 +40,6 @@ final class HomeViewController: UIViewController {
         $0.register(PlacesCell.self, forCellWithReuseIdentifier: PlacesCell.reuseID)
         
         $0.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
         $0.backgroundColor = .clear
         
         return $0
@@ -60,9 +59,7 @@ final class HomeViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        // output.changeOnboardingStatus(false)
         createDataSource()
-        //createSnapshot()
         output.viewDidLoad()
     }
     
@@ -152,7 +149,6 @@ final class HomeViewController: UIViewController {
             case .places:
                 header.onTap = {
                     print("places")
-                    // self?.router?.openPlaces()
                 }
             default:
                 header.onTap = nil
@@ -194,7 +190,6 @@ extension HomeViewController: UICollectionViewDelegate {
         let scrollHeight = scrollView.contentSize.height - scrollView.bounds.height
         let scrollPercentage = offsetY / scrollHeight
         
-        // Изменяем высоту фона в зависимости от скролла
         updateBackgroundHeight(for: offsetY, percentage: scrollPercentage)
     }
     
