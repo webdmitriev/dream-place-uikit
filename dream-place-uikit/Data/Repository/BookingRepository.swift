@@ -31,7 +31,7 @@ final class BookingRepository: BookingRepositoryProtocol {
             .eraseToAnyPublisher()
     }
     
-    func fetchPlaces() -> AnyPublisher<[Places], any Error> {
+    func fetchPlaces() -> AnyPublisher<[Places], Error> {
         let url = baseURL.appendingPathComponent("places")
         
         return urlSession.dataTaskPublisher(for: url)

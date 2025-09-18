@@ -44,9 +44,10 @@ final class BookingDetailsView: UIViewController {
     private lazy var showMoreButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("Read more", for: .normal)
+        btn.setTitle(" Read more... ", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         btn.tintColor = .systemBlue
+        btn.backgroundColor = .appBg
         btn.addTarget(self, action: #selector(toggleDescription), for: .touchUpInside)
         return btn
     }()
@@ -203,7 +204,6 @@ final class BookingDetailsView: UIViewController {
         ])
         
         contentView.addSubviews(descrLabel, showMoreButton)
-        showMoreButton.backgroundColor = .appBg
         NSLayoutConstraint.activate([
             descrLabel.topAnchor.constraint(equalTo: descrTitleLabel.bottomAnchor, constant: 8),
             descrLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: uiBuilder.offset),
@@ -262,7 +262,10 @@ final class BookingDetailsView: UIViewController {
     private func configureUI() {
         titleLabel.text = item.name
         addressLabel.text = item.address
-        descrLabel.text = item.descr
+        
+        if let descr = item.descr {
+            descrLabel.text = descr.htmlToPlainText
+        }
 
         bottomPrice.setPriceText(price: item.price ?? 0, subtitle: " /night", priceFZ: 17, color: .appBlack)
         
