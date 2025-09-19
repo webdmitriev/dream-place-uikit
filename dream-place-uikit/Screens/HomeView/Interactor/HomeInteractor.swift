@@ -25,7 +25,7 @@ class HomeInteractor: HomeInteractorInput {
             CollectionStruct(title: "Hotel Near You", action: false, type: .header, items: [.booking(Booking(id: 01, name: "Header"))]),
             CollectionStruct(title: "Search", action: false, type: .search, items: [.booking(Booking(id: 02, name: "Search"))]),
             CollectionStruct(title: "Hotel Near You", action: true, type: .hotels, items: []),
-            CollectionStruct(title: "Explore Place", action: true, type: .places, items: [])
+            CollectionStruct(title: "Explore Place", action: false, type: .places, items: [])
         ]
         
         // 2. Загружаем отели

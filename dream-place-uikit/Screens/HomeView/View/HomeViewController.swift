@@ -146,10 +146,6 @@ final class HomeViewController: UIViewController {
                 header.onTap = { [weak self] in
                     self?.router?.openBookingTab()
                 }
-            case .places:
-                header.onTap = {
-                    print("places")
-                }
             default:
                 header.onTap = nil
             }
