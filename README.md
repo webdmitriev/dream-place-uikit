@@ -22,10 +22,16 @@
 - CoreLocation, MapKit
 
 
-## 📸 Скриншоты
-| Onboarding | Home | Booking | Favorite | BookingDetails | Map | PlaceDetails |
-|--------------|--------------|--------------|--------------|--------------|--------------|--------------|
-| ![Onboarding](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-01-scaled.jpg) | ![Home](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-02-scaled.jpg) | ![Booking](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-03-scaled.jpg) | ![Favorite](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-04-scaled.jpg) | ![BookingDetails](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-05-scaled.jpg) | ![Map](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-06-scaled.jpg) | ![PlaceDetails](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-07-scaled.jpg) |
+## 📸 Скриншоты 01
+| Onboarding | Home | Booking | Favorite |
+|--------------|--------------|--------------|--------------|
+| ![Onboarding](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-01-scaled.jpg) | ![Home](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-02-scaled.jpg) | ![Booking](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-03-scaled.jpg) | ![Favorite](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-04-scaled.jpg) |
+
+
+## 📸 Скриншоты 02
+| BookingDetails | Map | PlaceDetails |
+|--------------|--------------|--------------|
+| ![BookingDetails](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-05-scaled.jpg) | ![Map](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-06-scaled.jpg) | ![PlaceDetails](https://api.webdmitriev.com/wp-content/uploads/2025/09/dream-place-uikit-07-scaled.jpg) |
 
 
 ## ⚙️ Установка
